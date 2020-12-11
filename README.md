@@ -25,3 +25,10 @@ python3 -m venv venv
 source venv/bin/activate
 pip install assets/coderone-challenge-dungeon-0.1.4.tar.gz
 ```
+
+## Contributing
+
+1. Switch `develop`
+2. Create a new branch (`git checkout -b <branch-name>`)
+
+Note: Pushes to `master` and `develop` branches can only be through pull requests
