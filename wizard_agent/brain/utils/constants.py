@@ -3,6 +3,8 @@ ACTIONS = {
     "down": "d",
     "left": "l",
     "right": "r",
-    "bomb": "b",
+    "bomb": "p",
     "none": ""
 }
+
+ACTION_LIST = ['', 'u', 'd', 'l', 'r', 'p']
