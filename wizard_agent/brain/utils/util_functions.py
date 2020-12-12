@@ -1,6 +1,8 @@
 from . import constants
+from . import structures
 
 ACTIONS = constants.ACTIONS
+Node = structures.Node
 
 
 def manhattan_distance(start, end):
@@ -92,3 +94,80 @@ def move_to_tile(location, tile):
         return ACTIONS["right"]
     else:
         return ACTIONS["none"]
+
+
+def get_shortest_path(start, end, game_state):
+    """
+    Finds the shortest path from the start node to the end node.
+    Returns an array of (x,y) tuples. Uses A* search algorithm
+    """
+    # create a list for all nodes to visit and have been visited
+    queue = []
+    visited = []
+
+    # create a start node and end node
+    start_node = Node(start, None)
+    goal_node = Node(end, None)
+
+    queue.append(start_node)
+
+    while len(queue) > 0:
+        # sort the open list to get the node with the lowest cost first
+        queue.sort()
+
+        # get the node with the lowest cost
+        current_node = queue.pop(0)
+
+        # add the current node to the closed list
+        visited.append(current_node)
+
+        # check if we have reached the goal, return the path
+        if current_node == goal_node:
+            path = []
+            while current_node != start_node:
+                path.append(current_node.position)
+                current_node = current_node.parent
+            # return reversed
+            return path[::-1]
+
+        # loop through each neighbour
+        neighbours = get_surrounding_tiles(current_node.position, game_state)
+
+        for tile in neighbours:
+            if not is_walkable(tile, game_state):
+                continue  # skip if not walkable
+
+            neighbour = Node(tile, current_node)
+
+            if neighbour in visited:
+                continue  # skip if visited
+
+            # generate heuristics
+            neighbour.dist_to_start = manhattan_distance(neighbour.position, start_node.position)
+            neighbour.dist_to_goal = manhattan_distance(neighbour.position, goal_node.position)
+            neighbour.total_cost = neighbour.dist_to_start + neighbour.dist_to_goal
+
+            # check if neighbour is in the open list and if it has a lower total value
+            if can_enqueue(queue, neighbour):
+                queue.append(neighbour)
+
+    return None  # no path found
+
+
+def is_walkable(tile, game_state):
+    """
+    Returns true if the tile is walkable
+    """
+    collectible = ["a", "t"]
+    return not game_state.is_occupied(tile) or game_state.entity_at(tile) in collectible
+
+
+def can_enqueue(queue, neighbour):
+    """
+    Helper function for the A* search algorithm. Checks if neighbour is in
+    the queue and if it has lower total value
+    """
+    for node in queue:
+        if neighbour == node and neighbour.total_cost >= node.total_cost:
+            return False
+    return True

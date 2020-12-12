@@ -28,4 +28,7 @@ class ReloadStrategy(strategy.Strategy):
         # get the nearest ammo to the player
         nearest_ammo = _get_nearest_ammo(location, ammo)
         # navigate to the ammo
+        if nearest_ammo is not None:
+            path = utils.get_shortest_path(location, nearest_ammo, game_state)
+            print(path)
         return [constants.ACTIONS["none"]]
