@@ -32,7 +32,8 @@ class Agent:
             'random': brain.RandomStrategy(),
             'flee': brain.FleeStrategy(),
             'move': brain.MoveStrategy(),
-            'bomb': brain.BasicBombStrategy()
+            'bomb': brain.BasicBombStrategy(),
+            'reload': brain.ReloadStrategy()
         }
         self.action_queue = []
 
@@ -56,7 +57,7 @@ class Agent:
             elif ammo > 0:
                 strategy_name = 'bomb'
             elif ammo == 0:
-                print("need to reload")
+                strategy_name = 'reload'
 
             # enqueue next action sequence
             strategy = self.strategies[strategy_name]
