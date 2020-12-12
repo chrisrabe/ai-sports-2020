@@ -3,6 +3,6 @@ ACTIONS = {
     "down": "d",
     "left": "l",
     "right": "r",
-    "bomb": "b",
+    "bomb": "p",
     "none": ""
 }

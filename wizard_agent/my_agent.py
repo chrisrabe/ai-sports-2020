@@ -20,10 +20,18 @@ class Agent:
 		self.strategies = {
 			'random': brain.RandomStrategy()
 		}
+		self.action_queue = []
 
 	def next_move(self, game_state, player_state):
 		"""
 		This method is called each time your Agent is required to choose an action
 		"""
-		strategy = self.strategies['random']
-		return strategy.execute(game_state, player_state)
+
+		# if queue is empty, get strategy
+		if not self.action_queue:
+			strategy = self.strategies['random']
+			actions = strategy.execute(game_state, player_state)
+			self.action_queue = self.action_queue + actions
+
+		# return the action on front of queue
+		return self.action_queue.pop(0)
