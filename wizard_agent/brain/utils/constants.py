@@ -7,4 +7,4 @@ ACTIONS = {
     "none": ""
 }
 
-ACTION_LIST = ['', 'u', 'd', 'l','r','p']
+ACTION_LIST = ['', 'u', 'd', 'l', 'r', 'p']
