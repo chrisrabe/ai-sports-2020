@@ -43,41 +43,43 @@ class agent:
 		# first, check if we're within range of a bomb
 		# get list of bombs within range
 		bombs_in_range = self.get_bombs_in_range(self.location, bombs)
-  
-        # get list of bombs within range
-		bombs_in_range = self.get(self.location, bombs)
 
 		# get our surrounding tiles
 		surrounding_tiles = self.get_surrounding_tiles(self.location)
 
 		# get list of empty tiles around us
 		empty_tiles = self.get_empty_tiles(surrounding_tiles)
-  
-        # get nearest treasure tile
-        # treasure_tile = self.get_nearest_treasure_tile(surrounding_tiles, game_state.treasures)
-        
-        # matrix = np.zeros((10,10))
-        # for row in range(0,10):
-        #     for col in range(0,10):
-        #         if ([row,col] in empty_tiles):
-        #             matrix[row,col]=1
-        
-        # grid = Grid(matrix=matrix)
 
-        # start = grid.node(x,y for (x,y) in self.location)
-        # end = grid.node(x,y for (x,y) in treasure_tile)
+		# get nearest treasure tile
+		treasure_tile = self.get_nearest_treasure_tile(surrounding_tiles, game_state.treasure)
+		
+		matrix = np.zeros((10,10))
+		for row in range(0,10):
+			for col in range(0,10):
+				if ((row,col) in empty_tiles):
+					print(empty_tiles)
+					print(row,col)	
+					matrix[row,col]=1
+		
+		grid = Grid(matrix=matrix)
+		if treasure_tile:
+			print(treasure_tile)
+			print(self.location)
+			start = grid.node(self.location[0],self.location[1])
+			end = grid.node(treasure_tile[0],treasure_tile[1])
 
-        # finder = AStarFinder(diagonal_movement=False)
-        # path, runs = finder.find_path(start, end, grid)
-
-        # print('operations:', runs, 'path length:', len(path))
-        # print(grid.grid_str(path=path, start=start, end=end))
+			finder = AStarFinder(diagonal_movement=False)
+			path, runs = finder.find_path(start, end, grid)
+			print(path)
+			print('operations:', runs, 'path length:', len(path))
+			print(grid.grid_str(path=path, start=start, end=end))
 
 		# if I'm on a bomb, I should probably move
+
 		if game_state.entity_at(self.location) == 'b':
 
 			print("I'm on a bomb. I'm going to move.")
-
+			
 			if empty_tiles:
 				# choose a random free tile to move to
 				random_tile = random.choice(empty_tiles)
@@ -220,30 +222,33 @@ class agent:
 	# # given a list of tiles and bombs
 	# find the tile with nearest treasure
 	def get_nearest_treasure_tile(self, tiles, treasures):
-        
-        # which treasure is closest to us?
+		
+		# which treasure is closest to us?
 		treasure_distance = 10  # some arbitrary high distance
-		closest_treasure = treasures[0]
+		if treasures:
+			closest_treasure = treasures[0]	
 
-		for treasure in treasures:
-			new_treasure_distance = self.manhattan_distance(treasure,self.location)
-        	if new_treasure_distance < treasure_distance:
-				treasure_distance = new_treasure_distance
-                closest_treasure = treasure
+			for treasure in treasures:
+				new_treasure_distance = self.manhattan_distance(treasure,self.location)
+				if new_treasure_distance < treasure_distance:
+					treasure_distance = new_treasure_distance
+					closest_treasure = treasure
 
-		best_dist = {}
-        # now we'll figure out which tile is furthest away from that bomb
-		for tile in tiles:
-            # get the manhattan distance
-			distance = self.manhattan_distance(closest_treasure, tile)
-            # store this in a dictionary
-			best_dist[tile] = distance
+			best_dist = {}
+			# now we'll figure out which tile is furthest away from that bomb
+			for tile in tiles:
+				# get the manhattan distance
+				distance = self.manhattan_distance(closest_treasure, tile)
+				# store this in a dictionary
+				best_dist[tile] = distance
 
-        # return the tile with the furthest distance from any bomb
-		treasure_tile = max(best_dist, key=best_dist.get)
+			# return the tile with the furthest distance from any bomb
+			treasure_tile = max(best_dist, key=best_dist.get)
 
-		return treasure_tile
-        
+			return treasure_tile
+		else:
+			return False
+		
 	# given an adjacent tile location, move us there
 	def move_to_tile(self, location, tile):
 
