@@ -55,6 +55,8 @@ class Agent:
                 strategy_name = 'flee'
             elif ammo > 0:
                 strategy_name = 'bomb'
+            elif ammo == 0:
+                print("need to reload")
 
             # enqueue next action sequence
             strategy = self.strategies[strategy_name]
