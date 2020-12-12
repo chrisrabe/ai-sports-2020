@@ -1,3 +1,5 @@
+from typing import List
+
 from . import constants
 from . import structures
 
@@ -171,3 +173,22 @@ def can_enqueue(queue, neighbour):
         if neighbour == node and neighbour.total_cost >= node.total_cost:
             return False
     return True
+
+
+def get_path_action_seq(location: object, path: List) -> List:
+    """
+    Given a list of (x,y) tuples, returns the action sequence to follow the path.
+    If path is not there, returns nothing
+    """
+    if path:
+        initial_action = move_to_tile(location, path[0])
+        action_seq = [initial_action]
+        i = 1
+        while i < len(path):
+            from_tile = path[i - 1]
+            to_tile = path[i]
+            action = move_to_tile(from_tile, to_tile)
+            action_seq.append(action)
+            i += 1
+        return action_seq
+    return [ACTIONS["none"]]
