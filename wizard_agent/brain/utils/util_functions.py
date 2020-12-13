@@ -230,3 +230,17 @@ def get_blast_zone(bomb, game_state):
             elif blast_dir == ACTIONS["down"]:
                 blast_tiles.append((x, y + 1))
     return blast_tiles
+
+
+def get_nearest_tile(location, tiles):
+    if tiles:
+        tile_dist = 10
+        closest_tile = tiles[0]
+        for tile in tiles:
+            new_dist = manhattan_distance(location, tile)
+            if new_dist < tile_dist:
+                tile_dist = new_dist
+                closest_tile = tile
+        return closest_tile
+    else:
+        return None

@@ -5,6 +5,7 @@ from . import utils as _utils
 utils = _utils.util_functions
 constants = _utils.constants
 
+ACTIONS = constants.ACTIONS
 
 def get_danger_zones(bombs, game_state):
     """
@@ -51,4 +52,12 @@ class FleeStrategy(strategy.Strategy):
         dangerous_tiles = get_danger_zones(bombs_in_range, game_state)
         # find all safe areas
         safe_tiles = get_safe_tiles(dangerous_tiles, game_state)
+        # get nearest safe tile
+        nearest_tile = utils.get_nearest_tile(location, safe_tiles)
 
+        if nearest_tile:
+            path = utils.get_shortest_path(location, nearest_tile, game_state)
+            action_seq = utils.get_path_action_seq(location, path)
+            return action_seq
+        else:
+            return ACTIONS["none"]
