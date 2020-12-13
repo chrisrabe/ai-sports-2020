@@ -19,3 +19,6 @@ class MoveStrategy(strategy.Strategy):
             return [utils.move_to_tile(location, random_tile)]
         else:
             return [ACTIONS["none"]]
+
+    def can_execute(self, game_state: object, player_state: object) -> bool:
+        return True

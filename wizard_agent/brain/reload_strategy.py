@@ -35,3 +35,10 @@ class ReloadStrategy(strategy.Strategy):
             return action_seq
 
         return [constants.ACTIONS["none"]]
+
+    def can_execute(self, game_state: object, player_state: object) -> bool:
+        player_ammo = player_state.ammo
+        location = player_state.location
+        ammo_pickups = game_state.ammo
+        ammo_in_range = utils.get_reachable_ammo(location, ammo_pickups, game_state)
+        return player_ammo == 0 and len(ammo_in_range) > 0

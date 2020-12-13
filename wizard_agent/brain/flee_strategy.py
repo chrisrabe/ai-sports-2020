@@ -125,3 +125,9 @@ class FleeStrategy(strategy.Strategy):
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
             return [ACTIONS["none"]]
+
+    def can_execute(self, game_state: object, player_state: object) -> bool:
+        location = player_state.location
+        bombs = game_state.bombs
+        bombs_in_range = utils.get_bombs_in_range(location, bombs)
+        return len(bombs_in_range) > 0

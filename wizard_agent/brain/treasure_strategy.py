@@ -19,7 +19,8 @@ def _get_nearest_treasure(location, treasure_list):
         return closest_treasure
     else:
         return None
-    
+
+
 def get_reachable_treasure(location, treasure_list, game_state: object):
     list_treasures = []
     for treasure in treasure_list:
@@ -43,3 +44,8 @@ class TreasureStrategy(strategy.Strategy):
             return action_seq
 
         return [constants.ACTIONS["none"]]
+
+    def can_execute(self, game_state: object, player_state: object) -> bool:
+        location = player_state.location
+        treasures = game_state.treasure
+        return len(get_reachable_treasure(location, treasures, game_state)) > 0
