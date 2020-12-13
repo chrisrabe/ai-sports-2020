@@ -49,7 +49,7 @@ def get_empty_tiles(tiles, game_state):
     empty_tiles = []
 
     for tile in tiles:
-        if not game_state.is_occupied(tile):
+        if is_walkable(tile, game_state):
             empty_tiles.append(tile)
 
     return empty_tiles
@@ -192,3 +192,64 @@ def get_path_action_seq(location: object, path: List) -> List:
             i += 1
         return action_seq
     return [ACTIONS["none"]]
+
+
+def get_bombs_in_range(location, bombs):
+    """
+    Retrieves the bombs within the range of the AI
+    """
+    bombs_in_range = []
+    for bomb in bombs:
+        distance = manhattan_distance(location, bomb)
+        # only freak out when bomb is in immediate position
+        if distance <= 6:
+            bombs_in_range.append(bomb)
+    return bombs_in_range
+
+
+def get_blast_zone(bomb, game_state):
+    """
+    Retrieves the tiles affected by the bomb blast
+    """
+    block_tile = ["ib", "sb", "ob"]
+    blast_tiles = [bomb]
+    neighbours = get_surrounding_tiles(bomb, game_state)
+    for tile in neighbours:
+        blast_tiles.append(tile)
+        entity = game_state.entity_at(tile)
+        if entity not in block_tile:
+            x = tile[0]
+            y = tile[1]
+            blast_dir = move_to_tile(bomb, tile)
+            if blast_dir == ACTIONS["left"]:
+                blast_tiles.append((x - 1, y))
+            elif blast_dir == ACTIONS["right"]:
+                blast_tiles.append((x + 1, y))
+            elif blast_dir == ACTIONS["up"]:
+                blast_tiles.append((x, y + 1))
+            elif blast_dir == ACTIONS["down"]:
+                blast_tiles.append((x, y - 1))
+    return blast_tiles
+
+
+def get_nearest_tile(location, tiles):
+    if tiles:
+        tile_dist = 10
+        closest_tile = tiles[0]
+        for tile in tiles:
+            new_dist = manhattan_distance(location, tile)
+            if new_dist < tile_dist:
+                tile_dist = new_dist
+                closest_tile = tile
+        return closest_tile
+    else:
+        return None
+
+
+def get_reachable_tiles(location, tiles, game_state):
+    reachable_tiles = []
+    for tile in tiles:
+        path = get_shortest_path(location, tile, game_state)
+        if path:
+            reachable_tiles.append(tile)
+    return reachable_tiles
