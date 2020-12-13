@@ -244,3 +244,12 @@ def get_nearest_tile(location, tiles):
         return closest_tile
     else:
         return None
+
+
+def get_reachable_ammo(location, ammo_list, game_state):
+    list_ammos = []
+    for ammo in ammo_list:
+        path = get_shortest_path(location, ammo, game_state)
+        if path:
+            list_ammos.append(ammo)
+    return list_ammos
