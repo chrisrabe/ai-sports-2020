@@ -4,6 +4,7 @@ from . import move_strategy
 from . import basic_bomb_strategy
 from . import reload_strategy
 from . import utils
+from . import bomb_placement_strategy
 
 
 def RandomStrategy():
@@ -24,3 +25,6 @@ def BasicBombStrategy():
 
 def ReloadStrategy():
     return reload_strategy.ReloadStrategy()
+
+def BombPlacementStrategy():
+    return bomb_placement_strategy.BombPlacementStrategy()
