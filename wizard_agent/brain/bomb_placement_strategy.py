@@ -55,7 +55,7 @@ class BombPlacementStrategy(strategy.Strategy):
         nearest_wood_block_location = _get_nearest_wood_block(location, wood_blocks)
 
         surrounding_tiles = utils.get_surrounding_tiles(nearest_wood_block_location, game_state)
-        empty_tiles empty_tiles(surrounding_tiles, game_state)
+        empty_tiles = utils.get_empty_tiles(surrounding_tiles, game_state)
 
         # navigate to the wood_block
         if nearest_wood_block_location is not None:

@@ -40,14 +40,9 @@ class Agent:
             'random': brain.RandomStrategy(),
             'flee': brain.FleeStrategy(),
             'move': brain.MoveStrategy(),
-<<<<<<< HEAD
             'bomb': brain.BombPlacementStrategy(),
-            'reload': brain.ReloadStrategy()
-=======
-            'bomb': brain.BasicBombStrategy(),
             'reload': brain.ReloadStrategy(),
             'treasure': brain.TreasureStrategy()
->>>>>>> develop
         }
         self.action_queue = []
 

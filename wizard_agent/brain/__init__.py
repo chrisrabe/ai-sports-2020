@@ -23,10 +23,7 @@ def BasicBombStrategy():
 def ReloadStrategy():
     return reload_strategy.ReloadStrategy()
 
-<<<<<<< HEAD
 def BombPlacementStrategy():
     return bomb_placement_strategy.BombPlacementStrategy()
-=======
 def TreasureStrategy():
     return treasure_strategy.TreasureStrategy()
->>>>>>> develop
