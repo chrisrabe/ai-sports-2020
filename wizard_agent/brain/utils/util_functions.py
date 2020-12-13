@@ -49,7 +49,7 @@ def get_empty_tiles(tiles, game_state):
     empty_tiles = []
 
     for tile in tiles:
-        if not is_walkable(tile, game_state):
+        if is_walkable(tile, game_state):
             empty_tiles.append(tile)
 
     return empty_tiles
@@ -226,9 +226,9 @@ def get_blast_zone(bomb, game_state):
             elif blast_dir == ACTIONS["right"]:
                 blast_tiles.append((x + 1, y))
             elif blast_dir == ACTIONS["up"]:
-                blast_tiles.append((x, y - 1))
-            elif blast_dir == ACTIONS["down"]:
                 blast_tiles.append((x, y + 1))
+            elif blast_dir == ACTIONS["down"]:
+                blast_tiles.append((x, y - 1))
     return blast_tiles
 
 
