@@ -4,6 +4,7 @@ from . import move_strategy
 from . import basic_bomb_strategy
 from . import reload_strategy
 from . import treasure_strategy
+from . import ore_bomb_strategy
 from . import utils
 
 
@@ -24,3 +25,6 @@ def ReloadStrategy():
 
 def TreasureStrategy():
     return treasure_strategy.TreasureStrategy()
+
+def OreBombStrategy():
+    return ore_bomb_strategy.OreBombStrategy()

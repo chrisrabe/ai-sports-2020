@@ -192,3 +192,22 @@ def get_path_action_seq(location: object, path: List) -> List:
             i += 1
         return action_seq
     return [ACTIONS["none"]]
+
+def get_tile_next_to_block(location, tiles, nearest_ore_block_location):
+    """
+    Given a list of tiles and ore blocks, find the tile that's closest empty tile to move to
+    """
+
+    block_distance = 10
+
+    empty_tile_near_block_dict = {}
+    for tile in tiles:
+        distance = manhattan_distance(nearest_ore_block_location, tile)
+        empty_tile_near_block_dict[tile] = distance
+
+    # return the tile with the furthest distance from any bomb
+    if len(empty_tile_near_block_dict) > 0: 
+        best_tile = min(empty_tile_near_block_dict, key=empty_tile_near_block_dict.get)
+        return best_tile
+    else:
+        return None
