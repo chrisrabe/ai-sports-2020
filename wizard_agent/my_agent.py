@@ -23,7 +23,7 @@ class Agent:
             'random': brain.RandomStrategy(),
             'flee': brain.FleeStrategy(),
             'move': brain.MoveStrategy(),
-            'bomb': brain.BasicBombStrategy(),
+            'bomb': brain.BombPlacementStrategy(),
             'reload': brain.ReloadStrategy(),
             'treasure': brain.TreasureStrategy()
         }
