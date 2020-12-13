@@ -6,7 +6,7 @@ utils = _utils.util_functions
 constants = _utils.constants
 
 ACTIONS = constants.ACTIONS
-EXPLOSION_TICKS = 40
+EXPLOSION_TICKS = 5
 
 
 def get_danger_zones(bombs, game_state):
