@@ -15,7 +15,6 @@ def _get_nearest_wood_block(location, wood_block_list):
             if new_wood_block_dist < wood_block_distance:
                 wood_block_distance = new_wood_block_dist
                 closest_wood_block = wood_block
-                print(closest_wood_block)
         return closest_wood_block
     else:
         return None
@@ -40,10 +39,13 @@ def get_tile_next_to_block(location, tiles, wood_blocks):
         empty_tile_near_block_dict[tile] = distance
 
     # return the tile with the furthest distance from any bomb
-    best_tile = min(empty_tile_near_block_dict, key=empty_tile_near_block_dict.get)
 
-    return best_tile
-
+    if len(empty_tile_near_block_dict) > 0: 
+        best_tile = min(empty_tile_near_block_dict, key=empty_tile_near_block_dict.get)
+        return best_tile
+    else:
+        return None
+    
 
 class BombPlacementStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
