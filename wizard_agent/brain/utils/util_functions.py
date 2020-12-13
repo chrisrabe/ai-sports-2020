@@ -192,3 +192,28 @@ def get_path_action_seq(location: object, path: List) -> List:
             i += 1
         return action_seq
     return [ACTIONS["none"]]
+
+
+def get_blast_zone(bomb, game_state):
+    """
+    Retrieves the tiles affected by the bomb blast
+    """
+    block_tile = ["ib", "sb", "ob"]
+    blast_tiles = [bomb]
+    neighbours = get_surrounding_tiles(bomb, game_state)
+    for tile in neighbours:
+        blast_tiles.append(tile)
+        entity = game_state.entity_at(tile)
+        if entity not in block_tile:
+            x = tile[0]
+            y = tile[1]
+            blast_dir = move_to_tile(bomb, tile)
+            if blast_dir == ACTIONS["left"]:
+                blast_tiles.append((x - 1, y))
+            elif blast_dir == ACTIONS["right"]:
+                blast_tiles.append((x + 1, y))
+            elif blast_dir == ACTIONS["up"]:
+                blast_tiles.append((x, y - 1))
+            elif blast_dir == ACTIONS["down"]:
+                blast_tiles.append((x, y + 1))
+    return blast_tiles
