@@ -33,6 +33,14 @@ def get_reachable_treasure(location, treasure_list, game_state: object):
             list_treasures.append(treasure)
     return list_treasures
 
+def get_reachable_ammo(location, ammo_list, game_state: object):
+    list_ammos = []
+    for ammo in ammo_list:
+        path = utils.get_shortest_path(location, ammo, game_state)
+        if path:
+            list_ammos.append(ammo)
+    return list_ammos
+
 
 class Agent:
     def __init__(self):
@@ -56,9 +64,11 @@ class Agent:
             bombs = game_state.bombs
             treasures = game_state.treasure
             ammo = player_state.ammo
+            ammos = game_state.ammo
 
             bombs_in_range = get_bombs_in_range(location, bombs)
             treasure_in_range = get_reachable_treasure(location, treasures, game_state)
+            ammo_in_range = get_reachable_ammo(location, ammos, game_state)
 
             # Determine next action
             if game_state.entity_at(location) == 'b':
@@ -69,7 +79,7 @@ class Agent:
                 strategy_name = 'flee'
             elif ammo > 0:
                 strategy_name = 'bomb'
-            elif ammo == 0:
+            elif ammo == 0 and ammo_in_range:
                 strategy_name = 'reload'
             
 
