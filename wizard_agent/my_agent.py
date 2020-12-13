@@ -80,4 +80,3 @@ class Agent:
 
         # execute the first action
         return self.action_queue.pop(0)
-    
