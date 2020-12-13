@@ -43,11 +43,21 @@ def get_safe_tiles(danger_tiles, game_state):
     return safe_tiles
 
 
+def get_exploded_bombs(cur_bombs, prev_bombs):
+    """
+    Compares the current bombs and the previous bombs and checks
+    """
+    exploded_bombs = []
+    for bomb in prev_bombs:
+        if bomb not in cur_bombs:
+            exploded_bombs.append(bomb)
+    return exploded_bombs
+
+
 class FleeStrategy(strategy.Strategy):
 
     def __init__(self):
         self.prev_bombs = []
-        self.exploded_bombs = []
 
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
@@ -56,6 +66,13 @@ class FleeStrategy(strategy.Strategy):
         bombs_in_range = utils.get_bombs_in_range(location, bombs)
         # get dangerous tiles
         dangerous_tiles = get_danger_zones(bombs_in_range, game_state)
+
+        # get exploded bombs from previous bombs
+        exploded_bombs = get_exploded_bombs(bombs, self.prev_bombs)
+        explosion_area = get_danger_zones(exploded_bombs, game_state)
+        dangerous_tiles = dangerous_tiles + explosion_area
+
+        self.prev_bombs = bombs
 
         # wait if not standing in danger zone
         if location not in dangerous_tiles:
@@ -71,3 +88,4 @@ class FleeStrategy(strategy.Strategy):
                 path = utils.get_shortest_path(location, nearest_tile, game_state)
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
+            return [ACTIONS["none"]]
