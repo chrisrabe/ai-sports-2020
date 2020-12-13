@@ -253,3 +253,20 @@ def get_reachable_tiles(location, tiles, game_state):
         if path:
             reachable_tiles.append(tile)
     return reachable_tiles
+
+
+def get_surrounding_empty_tiles(location, game_state):
+    """
+    Retrieves surrounding walkable tile around the location
+    """
+    surrounding_tiles = get_surrounding_tiles(location, game_state)
+    empty_tiles = get_empty_tiles(surrounding_tiles, game_state)
+    return empty_tiles
+
+
+def get_empty_locations(tiles, game_state):
+    empty_locations = []
+    for tile in tiles:
+        empty_tiles = get_surrounding_empty_tiles(tile, game_state)
+        empty_locations = empty_locations + empty_tiles
+    return empty_locations

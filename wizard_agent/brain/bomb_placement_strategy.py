@@ -6,29 +6,12 @@ utils = _utils.util_functions
 constants = _utils.constants
 
 
-def get_surrounding_empty_tiles(location, game_state):
-    """
-    Retrieves surrounding walkable tile around the location
-    """
-    surrounding_tiles = utils.get_surrounding_tiles(location, game_state)
-    empty_tiles = utils.get_empty_tiles(surrounding_tiles, game_state)
-    return empty_tiles
-
-
-def get_empty_locations(tiles, game_state):
-    empty_locations = []
-    for tile in tiles:
-        empty_tiles = get_surrounding_empty_tiles(tile, game_state)
-        empty_locations = empty_locations + empty_tiles
-    return empty_locations
-
-
 def get_nearest_empty_wood_tile(game_state, player_state):
     wood_blocks = game_state.soft_blocks
     location = player_state.location
 
     # get the nearest block to wood near player
-    empty_tiles_near_wood = get_empty_locations(wood_blocks, game_state)
+    empty_tiles_near_wood = utils.get_empty_locations(wood_blocks, game_state)
     reachable_tiles = utils.get_reachable_tiles(location, empty_tiles_near_wood, game_state)
     nearest_empty_tile = utils.get_nearest_tile(location, reachable_tiles)
     return nearest_empty_tile
