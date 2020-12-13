@@ -11,19 +11,26 @@ from . import bomb_placement_strategy
 def RandomStrategy():
     return random_strategy.RandomStrategy()
 
+
 def FleeStrategy():
     return flee_strategy.FleeStrategy()
+
 
 def MoveStrategy():
     return move_strategy.MoveStrategy()
 
+
 def BasicBombStrategy():
     return basic_bomb_strategy.BasicBombStrategy()
+
 
 def ReloadStrategy():
     return reload_strategy.ReloadStrategy()
 
+
 def BombPlacementStrategy():
     return bomb_placement_strategy.BombPlacementStrategy()
+
+
 def TreasureStrategy():
     return treasure_strategy.TreasureStrategy()
