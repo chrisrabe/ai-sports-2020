@@ -21,20 +21,11 @@ def _get_nearest_treasure(location, treasure_list):
         return None
 
 
-def get_reachable_treasure(location, treasure_list, game_state: object):
-    list_treasures = []
-    for treasure in treasure_list:
-        path = utils.get_shortest_path(location, treasure, game_state)
-        if path:
-            list_treasures.append(treasure)
-    return list_treasures
-
-
 class TreasureStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
         treasure = game_state.treasure
-        treasures = get_reachable_treasure(location, treasure, game_state)
+        treasures = utils.get_reachable_tiles(location, treasure, game_state)
         # get the nearest treasure to the player
         nearest_treasure = _get_nearest_treasure(location, treasures)
         # navigate to the treasure
@@ -48,4 +39,5 @@ class TreasureStrategy(strategy.Strategy):
     def can_execute(self, game_state: object, player_state: object) -> bool:
         location = player_state.location
         treasures = game_state.treasure
-        return len(get_reachable_treasure(location, treasures, game_state)) > 0
+        reachable_treasure = utils.get_reachable_tiles(location, treasures, game_state)
+        return len(reachable_treasure) > 0

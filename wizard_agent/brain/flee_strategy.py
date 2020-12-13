@@ -6,7 +6,7 @@ utils = _utils.util_functions
 constants = _utils.constants
 
 ACTIONS = constants.ACTIONS
-EXPLOSION_TICKS = 5
+EXPLOSION_TICKS = 40
 
 
 def get_danger_zones(bombs, game_state):
@@ -116,9 +116,10 @@ class FleeStrategy(strategy.Strategy):
         else:
             # find all safe areas
             safe_tiles = get_safe_tiles(dangerous_tiles, game_state)
+            reachable_tiles = utils.get_reachable_tiles(location, safe_tiles, game_state)
 
             # get nearest safe tile
-            nearest_tile = utils.get_nearest_tile(location, safe_tiles)
+            nearest_tile = utils.get_nearest_tile(location, reachable_tiles)
 
             if nearest_tile:
                 path = utils.get_shortest_path(location, nearest_tile, game_state)
@@ -130,4 +131,5 @@ class FleeStrategy(strategy.Strategy):
         location = player_state.location
         bombs = game_state.bombs
         bombs_in_range = utils.get_bombs_in_range(location, bombs)
-        return len(bombs_in_range) > 0
+        dangerous_tiles = get_danger_zones(bombs_in_range, game_state)
+        return len(bombs_in_range) > 0 and location in dangerous_tiles
