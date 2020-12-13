@@ -25,9 +25,11 @@ class Agent:
             'move': brain.MoveStrategy(),
             'bomb': brain.BombPlacementStrategy(),
             'reload': brain.ReloadStrategy(),
-            'treasure': brain.TreasureStrategy()
+            'treasure': brain.TreasureStrategy(),
+            'orebomb': brain.OreBombStrategy()
         }
         self.action_queue = []
+        self.ore_state = {}
 
     def next_move(self, game_state, player_state):
         """This method is called each time your Agent is required to choose an action"""
@@ -39,6 +41,7 @@ class Agent:
             can_do_bomb = self.strategies["bomb"].can_execute(game_state, player_state)
             can_do_reload = self.strategies["reload"].can_execute(game_state, player_state)
             can_do_treasure = self.strategies["treasure"].can_execute(game_state, player_state)
+            can_do_ore_bomb = self.strategies["orebomb"].can_execute(game_state, player_state)
 
             # Determine next action
             if can_do_treasure:
@@ -47,6 +50,8 @@ class Agent:
                 strategy_name = 'flee'
             elif can_do_bomb:
                 strategy_name = 'bomb'
+            elif can_do_ore_bomb:
+                strategy_name = 'orebomb'
             elif can_do_reload:
                 strategy_name = 'reload'
 
