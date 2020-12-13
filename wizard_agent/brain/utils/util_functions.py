@@ -49,7 +49,7 @@ def get_empty_tiles(tiles, game_state):
     empty_tiles = []
 
     for tile in tiles:
-        if not game_state.is_occupied(tile):
+        if not is_walkable(tile, game_state):
             empty_tiles.append(tile)
 
     return empty_tiles
@@ -192,6 +192,19 @@ def get_path_action_seq(location: object, path: List) -> List:
             i += 1
         return action_seq
     return [ACTIONS["none"]]
+
+
+def get_bombs_in_range(location, bombs):
+    """
+    Retrieves the bombs within the range of the AI
+    """
+    bombs_in_range = []
+    for bomb in bombs:
+        distance = manhattan_distance(location, bomb)
+        # only freak out when bomb is in immediate position
+        if distance <= 6:
+            bombs_in_range.append(bomb)
+    return bombs_in_range
 
 
 def get_blast_zone(bomb, game_state):

@@ -17,15 +17,6 @@ from . import brain
 utils = brain.utils.util_functions
 
 
-def get_bombs_in_range(location, bombs):
-    bombs_in_range = []
-    for bomb in bombs:
-        distance = utils.manhattan_distance(location, bomb)
-        if distance <= 10:
-            bombs_in_range.append(bomb)
-    return bombs_in_range
-
-
 class Agent:
     def __init__(self):
         self.strategies = {
@@ -47,12 +38,10 @@ class Agent:
             bombs = game_state.bombs
             ammo = player_state.ammo
 
-            bombs_in_range = get_bombs_in_range(location, bombs)
+            bombs_in_range = utils.get_bombs_in_range(location, bombs)
 
             # Determine next action
-            if game_state.entity_at(location) == 'b':
-                strategy_name = 'move'
-            elif bombs_in_range:
+            if bombs_in_range:
                 strategy_name = 'flee'
             elif ammo > 0:
                 strategy_name = 'bomb'
