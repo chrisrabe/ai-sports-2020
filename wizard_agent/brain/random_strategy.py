@@ -23,3 +23,6 @@ class RandomStrategy(strategy.Strategy):
         action = random.choice(actions)
 
         return [action]
+
+    def can_execute(self, game_state: object, player_state: object) -> bool:
+        return True

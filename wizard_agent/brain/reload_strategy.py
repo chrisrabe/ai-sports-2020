@@ -25,8 +25,9 @@ class ReloadStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
         ammo = game_state.ammo
         location = player_state.location
+        ammos = utils.get_reachable_tiles(location, ammo, game_state)
         # get the nearest ammo to the player
-        nearest_ammo = _get_nearest_ammo(location, ammo)
+        nearest_ammo = _get_nearest_ammo(location, ammos)
         # navigate to the ammo
         if nearest_ammo is not None:
             path = utils.get_shortest_path(location, nearest_ammo, game_state)
@@ -34,3 +35,10 @@ class ReloadStrategy(strategy.Strategy):
             return action_seq
 
         return [constants.ACTIONS["none"]]
+
+    def can_execute(self, game_state: object, player_state: object) -> bool:
+        player_ammo = player_state.ammo
+        location = player_state.location
+        ammo_pickups = game_state.ammo
+        ammo_in_range = utils.get_reachable_tiles(location, ammo_pickups, game_state)
+        return player_ammo == 0 and len(ammo_in_range) > 0

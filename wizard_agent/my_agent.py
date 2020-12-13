@@ -17,23 +17,6 @@ from . import brain
 utils = brain.utils.util_functions
 
 
-def get_bombs_in_range(location, bombs):
-    bombs_in_range = []
-    for bomb in bombs:
-        distance = utils.manhattan_distance(location, bomb)
-        if distance <= 10:
-            bombs_in_range.append(bomb)
-    return bombs_in_range
-
-def get_reachable_treasure(location, treasure_list, game_state: object):
-    list_treasures = []
-    for treasure in treasure_list:
-        path = utils.get_shortest_path(location, treasure, game_state)
-        if path:
-            list_treasures.append(treasure)
-    return list_treasures
-
-
 class Agent:
     def __init__(self):
         self.strategies = {
@@ -52,26 +35,20 @@ class Agent:
         # if queue is empty, get strategy
         if not self.action_queue:
             strategy_name = "random"
-            location = player_state.location
-            bombs = game_state.bombs
-            treasures = game_state.treasure
-            ammo = player_state.ammo
-
-            bombs_in_range = get_bombs_in_range(location, bombs)
-            treasure_in_range = get_reachable_treasure(location, treasures, game_state)
+            can_do_flee = self.strategies["flee"].can_execute(game_state, player_state)
+            can_do_bomb = self.strategies["bomb"].can_execute(game_state, player_state)
+            can_do_reload = self.strategies["reload"].can_execute(game_state, player_state)
+            can_do_treasure = self.strategies["treasure"].can_execute(game_state, player_state)
 
             # Determine next action
-            if game_state.entity_at(location) == 'b':
-                strategy_name = 'move'
-            elif treasure_in_range:
+            if can_do_treasure:
                 strategy_name = 'treasure'
-            elif bombs_in_range:
+            elif can_do_flee:
                 strategy_name = 'flee'
-            elif ammo > 0:
+            elif can_do_bomb:
                 strategy_name = 'bomb'
-            elif ammo == 0:
+            elif can_do_reload:
                 strategy_name = 'reload'
-            
 
             # enqueue next action sequence
             strategy = self.strategies[strategy_name]
