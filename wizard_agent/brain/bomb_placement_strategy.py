@@ -1,10 +1,10 @@
 from typing import List
-import random
 from . import strategy
 from . import utils as _utils
 
 utils = _utils.util_functions
 constants = _utils.constants
+
 
 def _get_nearest_wood_block(location, wood_block_list):
     if wood_block_list:
@@ -18,6 +18,7 @@ def _get_nearest_wood_block(location, wood_block_list):
         return closest_wood_block
     else:
         return None
+
 
 def get_tile_next_to_block(location, tiles, wood_blocks):
     """
@@ -49,8 +50,6 @@ def get_tile_next_to_block(location, tiles, wood_blocks):
 
 class BombPlacementStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
-
-        
         wood_blocks = game_state.soft_blocks
         location = player_state.location
         # get the nearest block to the player
@@ -68,3 +67,7 @@ class BombPlacementStrategy(strategy.Strategy):
             return action_seq
         else:
             return [constants.ACTIONS["none"]]
+
+    def can_execute(self, game_state: object, player_state: object) -> bool:
+        ammo = player_state.ammo
+        return ammo > 0
