@@ -62,7 +62,6 @@ class Agent:
             elif ammo == 0:
                 strategy_name = 'reload'
 
-
             # enqueue next action sequence
             strategy = self.strategies[strategy_name]
             actions = strategy.execute(game_state, player_state)

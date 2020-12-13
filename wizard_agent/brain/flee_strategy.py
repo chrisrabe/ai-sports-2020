@@ -7,6 +7,7 @@ constants = _utils.constants
 
 ACTIONS = constants.ACTIONS
 
+
 def get_danger_zones(bombs, game_state):
     """
     Retrieves the dangerous tiles
@@ -43,6 +44,11 @@ def get_safe_tiles(danger_tiles, game_state):
 
 
 class FleeStrategy(strategy.Strategy):
+
+    def __init__(self):
+        self.prev_bombs = []
+        self.exploded_bombs = []
+
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
         bombs = game_state.bombs
@@ -50,14 +56,18 @@ class FleeStrategy(strategy.Strategy):
         bombs_in_range = utils.get_bombs_in_range(location, bombs)
         # get dangerous tiles
         dangerous_tiles = get_danger_zones(bombs_in_range, game_state)
-        # find all safe areas
-        safe_tiles = get_safe_tiles(dangerous_tiles, game_state)
-        # get nearest safe tile
-        nearest_tile = utils.get_nearest_tile(location, safe_tiles)
 
-        if nearest_tile:
-            path = utils.get_shortest_path(location, nearest_tile, game_state)
-            action_seq = utils.get_path_action_seq(location, path)
-            return action_seq
+        # wait if not standing in danger zone
+        if location not in dangerous_tiles:
+            return [ACTIONS["none"]]
         else:
-            return ACTIONS["none"]
+            # find all safe areas
+            safe_tiles = get_safe_tiles(dangerous_tiles, game_state)
+
+            # get nearest safe tile
+            nearest_tile = utils.get_nearest_tile(location, safe_tiles)
+
+            if nearest_tile:
+                path = utils.get_shortest_path(location, nearest_tile, game_state)
+                action_seq = utils.get_path_action_seq(location, path)
+                return action_seq
