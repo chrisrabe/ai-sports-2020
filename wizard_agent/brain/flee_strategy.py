@@ -22,28 +22,6 @@ def get_danger_zones(bombs, game_state):
     return danger_tiles
 
 
-def get_surrounding_empty_tiles(location, game_state):
-    """
-    Retrieves surrounding walkable tile around the location
-    """
-    surrounding_tiles = utils.get_surrounding_tiles(location, game_state)
-    empty_tiles = utils.get_empty_tiles(surrounding_tiles, game_state)
-    return empty_tiles
-
-
-def get_safe_tiles(danger_tiles, game_state):
-    """
-    Retrieves all the safe walkable tiles outside of danger zone
-    """
-    safe_tiles = []
-    for tile in danger_tiles:
-        empty_tiles = get_surrounding_empty_tiles(tile, game_state)
-        for empty in empty_tiles:
-            if empty not in danger_tiles:
-                safe_tiles.append(empty)
-    return safe_tiles
-
-
 def get_exploded_bombs(cur_bombs, prev_bombs, active_bombs):
     """
     Compares the current bombs and the previous bombs and checks
@@ -115,7 +93,7 @@ class FleeStrategy(strategy.Strategy):
             return [ACTIONS["none"]]
         else:
             # find all safe areas
-            safe_tiles = get_safe_tiles(dangerous_tiles, game_state)
+            safe_tiles = utils.get_safe_tiles(dangerous_tiles, game_state)
             reachable_tiles = utils.get_reachable_tiles(location, safe_tiles, game_state)
 
             # get nearest safe tile
