@@ -40,9 +40,7 @@ class TreasureStrategy(strategy.Strategy):
         location = player_state.location
         treasure = game_state.treasure
         list_of_opponents = game_state.opponents(player_state.id)
-        opponent_location = 0
-        for opponent in list_of_opponents:
-            opponent_location = opponent
+        opponent_location = utils.get_opponent(location, list_of_opponents)
         treasures = utils.get_reachable_tiles(location, treasure, game_state)
         # get the nearest treasure to the player
         nearest_treasure = _get_nearest_treasure(location, treasures)
@@ -52,24 +50,26 @@ class TreasureStrategy(strategy.Strategy):
 
         # navigate to the treasure
         if nearest_treasure is not None:
-            if not utils.isOpponentCloser(location, opponent_location, nearest_treasure):
+            if not utils.is_opponent_closer(location, opponent_location, nearest_treasure):
                 path = utils.get_shortest_path(location, nearest_treasure, game_state)
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
-            elif furthest_treasure_from_opponent is not None:
-                path = utils.get_shortest_path(location, furthest_treasure_from_opponent, game_state)
-                action_seq = utils.get_path_action_seq(location, path)
-                return action_seq
+
+        if furthest_treasure_from_opponent is not None:
+            path = utils.get_shortest_path(location, furthest_treasure_from_opponent, game_state)
+            action_seq = utils.get_path_action_seq(location, path)
+            return action_seq
+
         return [constants.ACTIONS["none"]]
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
         location = player_state.location
         treasures = game_state.treasure
         list_of_opponents = game_state.opponents(player_state.id)
-        opponent_location = 0
-        for opponent in list_of_opponents:
-            opponent_location = opponent
+        opponent_location = utils.get_opponent(location, list_of_opponents)
         reachable_treasure = utils.get_reachable_tiles(location, treasures, game_state)
         furthest_treasure = _get_furthest_treasure_from_opponent(opponent_location, reachable_treasure)
         nearest_treasure = _get_nearest_treasure(location, reachable_treasure)
-        return nearest_treasure is not None or furthest_treasure is not None
+        is_opponent_closer = utils.is_opponent_closer(location, opponent_location, nearest_treasure)
+        can_reach_nearest_treasure = nearest_treasure is not None and not is_opponent_closer
+        return can_reach_nearest_treasure or furthest_treasure is not None
