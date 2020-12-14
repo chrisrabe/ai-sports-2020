@@ -48,6 +48,7 @@ class OreBombStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
         ore_blocks = game_state.ore_blocks
+        bombs = game_state.bombs
 
         # add ores into state
         for ore in ore_blocks:
@@ -63,20 +64,22 @@ class OreBombStrategy(strategy.Strategy):
             nearest_tile = get_nearest_empty_ore_tile(location, urgent_ores, game_state)
             nearest_ore = utils.get_nearest_tile(nearest_tile, urgent_ores)
             # remove ore from ore_state
-            self.ore_state.pop(nearest_ore)
-            path = utils.get_shortest_path(location, nearest_tile, game_state)
-            action_seq = utils.get_path_action_seq(location, path)
-            action_seq.append(ACTIONS["bomb"])
-            return action_seq
+            if utils.is_safe_path(location, nearest_tile, bombs, game_state):
+                self.ore_state.pop(nearest_ore)
+                path = utils.get_shortest_path(location, nearest_tile, game_state)
+                action_seq = utils.get_path_action_seq(location, path)
+                action_seq.append(ACTIONS["bomb"])
+                return action_seq
         else:
             nearest_tile = get_nearest_empty_ore_tile(location, ore_blocks, game_state)
             nearest_ore = utils.get_nearest_tile(nearest_tile, ore_blocks)
             # decrease ore state value
-            self.ore_state[nearest_ore] -= 1
-            path = utils.get_shortest_path(location, nearest_tile, game_state)
-            action_seq = utils.get_path_action_seq(location, path)
-            action_seq.append(ACTIONS["bomb"])
-            return action_seq
+            if utils.is_safe_path(location, nearest_tile, bombs, game_state):
+                self.ore_state[nearest_ore] -= 1
+                path = utils.get_shortest_path(location, nearest_tile, game_state)
+                action_seq = utils.get_path_action_seq(location, path)
+                action_seq.append(ACTIONS["bomb"])
+                return action_seq
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
         location = player_state.location

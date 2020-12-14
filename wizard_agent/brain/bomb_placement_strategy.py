@@ -20,10 +20,11 @@ def get_nearest_empty_wood_tile(game_state, player_state):
 class BombPlacementStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
+        bombs = game_state.bombs
         nearest_empty_tile = get_nearest_empty_wood_tile(game_state, player_state)
 
         # navigate to the wood_block
-        if nearest_empty_tile:
+        if nearest_empty_tile and utils.is_safe_path(location, nearest_empty_tile, bombs, game_state):
             path = utils.get_shortest_path(location, nearest_empty_tile, game_state)
             action_seq = utils.get_path_action_seq(location, path)
             action_seq.append(constants.ACTIONS["bomb"])

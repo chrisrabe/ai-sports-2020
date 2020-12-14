@@ -39,6 +39,7 @@ class TreasureStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
         treasure = game_state.treasure
+        bombs = game_state.bombs
         list_of_opponents = game_state.opponents(player_state.id)
         opponent_location = utils.get_opponent(location, list_of_opponents)
         treasures = utils.get_reachable_tiles(location, treasure, game_state)
@@ -50,15 +51,17 @@ class TreasureStrategy(strategy.Strategy):
 
         # navigate to the treasure
         if nearest_treasure is not None:
-            if not utils.is_opponent_closer(location, opponent_location, nearest_treasure):
+            if not utils.is_opponent_closer(location, opponent_location, nearest_treasure) and utils.is_safe_path(location, nearest_treasure, bombs, game_state):
                 path = utils.get_shortest_path(location, nearest_treasure, game_state)
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
 
+
         if furthest_treasure_from_opponent is not None:
-            path = utils.get_shortest_path(location, furthest_treasure_from_opponent, game_state)
-            action_seq = utils.get_path_action_seq(location, path)
-            return action_seq
+            if utils.is_safe_path(location, furthest_treasure_from_opponent, bombs, game_state):
+                path = utils.get_shortest_path(location, furthest_treasure_from_opponent, game_state)
+                action_seq = utils.get_path_action_seq(location, path)
+                return action_seq
 
         return [constants.ACTIONS["none"]]
 
