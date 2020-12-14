@@ -291,3 +291,14 @@ def get_opponent(location, opponents):
         if opponent != location:
             return opponent
     return opponents[0]
+
+def is_safe_path(location, target_location, bombs, game_state):
+    path = get_shortest_path(location, target_location, game_state)
+    all_blast = []
+    for bomb in bombs:
+        blast_tiles = get_blast_zone(bomb, game_state)
+        all_blast.append(blast_tiles)
+    for coord in path:
+        if coord in all_blast:
+            return False
+    return True
