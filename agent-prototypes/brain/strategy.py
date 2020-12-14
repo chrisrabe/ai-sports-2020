@@ -11,8 +11,3 @@ class Strategy:
         """
         pass
 
-    def can_execute(self, game_state: object, player_state: object) -> bool:
-        """
-        Returns whether or not the strategy can execute
-        """
-        pass

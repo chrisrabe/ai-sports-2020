@@ -4,21 +4,20 @@ from . import strategy
 from . import utils as _utils
 
 utils = _utils.util_functions
-ACTIONS = _utils.constants.ACTIONS
+constants = _utils.constants
 
 
-class MoveStrategy(strategy.Strategy):
+class FleeStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
+        bombs = game_state.bombs
+
         surrounding_tiles = utils.get_surrounding_tiles(location, game_state)
         empty_tiles = utils.get_empty_tiles(surrounding_tiles, game_state)
 
         if empty_tiles:
-            # TODO make decision based on future path
-            random_tile = random.choice(empty_tiles)
-            return [utils.move_to_tile(location, random_tile)]
+            # get the safest tile for us to move to
+            safest_tile = utils.get_safest_tile(location, empty_tiles, bombs)
+            return [utils.move_to_tile(location, safest_tile)]
         else:
-            return [ACTIONS["none"]]
-
-    def can_execute(self, game_state: object, player_state: object) -> bool:
-        return True
+            return [random.choice(constants.ACTION_LIST)]

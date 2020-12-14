@@ -17,24 +17,19 @@ from . import brain
 utils = brain.utils.util_functions
 
 
-def get_bombs_in_range(location, bombs):
-    bombs_in_range = []
-    for bomb in bombs:
-        distance = utils.manhattan_distance(location, bomb)
-        if distance <= 10:
-            bombs_in_range.append(bomb)
-    return bombs_in_range
-
-
 class Agent:
     def __init__(self):
         self.strategies = {
             'random': brain.RandomStrategy(),
             'flee': brain.FleeStrategy(),
             'move': brain.MoveStrategy(),
-            'bomb': brain.BasicBombStrategy()
+            'bomb': brain.BombPlacementStrategy(),
+            'reload': brain.ReloadStrategy(),
+            'treasure': brain.TreasureStrategy(),
+            'orebomb': brain.OreBombStrategy()
         }
         self.action_queue = []
+        self.ore_state = {}
 
     def next_move(self, game_state, player_state):
         """This method is called each time your Agent is required to choose an action"""
@@ -42,19 +37,23 @@ class Agent:
         # if queue is empty, get strategy
         if not self.action_queue:
             strategy_name = "random"
-            location = player_state.location
-            bombs = game_state.bombs
-            ammo = player_state.ammo
-
-            bombs_in_range = get_bombs_in_range(location, bombs)
+            can_do_flee = self.strategies["flee"].can_execute(game_state, player_state)
+            can_do_bomb = self.strategies["bomb"].can_execute(game_state, player_state)
+            can_do_reload = self.strategies["reload"].can_execute(game_state, player_state)
+            can_do_treasure = self.strategies["treasure"].can_execute(game_state, player_state)
+            can_do_ore_bomb = self.strategies["orebomb"].can_execute(game_state, player_state)
 
             # Determine next action
-            if game_state.entity_at(location) == 'b':
-                strategy_name = 'move'
-            elif bombs_in_range:
+            if can_do_treasure:
+                strategy_name = 'treasure'
+            elif can_do_flee:
                 strategy_name = 'flee'
-            elif ammo > 0:
+            elif can_do_bomb:
                 strategy_name = 'bomb'
+            elif can_do_ore_bomb:
+                strategy_name = 'orebomb'
+            elif can_do_reload:
+                strategy_name = 'reload'
 
             # enqueue next action sequence
             strategy = self.strategies[strategy_name]
