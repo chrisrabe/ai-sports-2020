@@ -55,6 +55,7 @@ class Agent:
             elif can_do_reload:
                 strategy_name = 'reload'
 
+            print(strategy_name)
             # enqueue next action sequence
             strategy = self.strategies[strategy_name]
             actions = strategy.execute(game_state, player_state)

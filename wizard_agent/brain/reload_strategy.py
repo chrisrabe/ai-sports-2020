@@ -78,8 +78,10 @@ class ReloadStrategy(strategy.Strategy):
 
         # define execution conditions
         is_opponent_closer = utils.is_opponent_closer(location, opponent_location, nearest_ammo)
-        closest_ammo_safe = utils.is_safe_path(location, nearest_ammo, bombs, game_state)
-        furthest_ammo_safe = utils.is_safe_path(location, furthest_ammo, bombs, game_state)
+        if nearest_ammo:
+            closest_ammo_safe = utils.is_safe_path(location, nearest_ammo, bombs, game_state)
+        if furthest_ammo:
+            furthest_ammo_safe = utils.is_safe_path(location, furthest_ammo, bombs, game_state)
         can_reach_nearest_ammo = nearest_ammo is not None and not is_opponent_closer and closest_ammo_safe
         can_reach_furthest_ammo = furthest_ammo is not None and furthest_ammo_safe
         can_reach_any_ammo = can_reach_furthest_ammo or can_reach_nearest_ammo
