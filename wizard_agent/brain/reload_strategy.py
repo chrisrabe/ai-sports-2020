@@ -65,14 +65,31 @@ class ReloadStrategy(strategy.Strategy):
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
         player_ammo = player_state.ammo
+        bombs = game_state.bombs
         location = player_state.location
         list_of_opponents = game_state.opponents(player_state.id)
         opponent_location = utils.get_opponent(location, list_of_opponents)
         ammo_pickups = game_state.ammo
         ammo_in_range = utils.get_reachable_tiles(location, ammo_pickups, game_state)
+
+        # define targets
         furthest_ammo = _get_furthest_ammo_from_opponent(opponent_location, ammo_in_range)
         nearest_ammo = _get_nearest_ammo(location, ammo_in_range)
+
+        # define execution conditions
         is_opponent_closer = utils.is_opponent_closer(location, opponent_location, nearest_ammo)
-        can_reach_nearest_ammo = nearest_ammo is not None and not is_opponent_closer
-        can_reach_any_ammo = furthest_ammo is not None or can_reach_nearest_ammo
+
+        # check safety
+        furthest_ammo_safe = True
+        closest_ammo_safe = True
+
+        if nearest_ammo is not None:
+            closest_ammo_safe = utils.is_safe_path(location, nearest_ammo, bombs, game_state)
+        if furthest_ammo is not None:
+            furthest_ammo_safe = utils.is_safe_path(location, furthest_ammo, bombs, game_state)
+
+        can_reach_nearest_ammo = nearest_ammo is not None and not is_opponent_closer and closest_ammo_safe
+        can_reach_furthest_ammo = furthest_ammo is not None and furthest_ammo_safe
+        can_reach_any_ammo = can_reach_furthest_ammo or can_reach_nearest_ammo
+
         return player_ammo < 3 and can_reach_any_ammo

@@ -26,7 +26,9 @@ class Agent:
             'bomb': brain.BombPlacementStrategy(),
             'reload': brain.ReloadStrategy(),
             'treasure': brain.TreasureStrategy(),
-            'orebomb': brain.OreBombStrategy()
+            'orebomb': brain.OreBombStrategy(),
+            'kill': brain.KillStrategy(),
+            'retreat': brain.RetreatStrategy()
         }
         self.action_queue = []
         self.ore_state = {}
@@ -36,12 +38,13 @@ class Agent:
 
         # if queue is empty, get strategy
         if not self.action_queue:
-            strategy_name = "random"
+            strategy_name = "retreat"
             can_do_flee = self.strategies["flee"].can_execute(game_state, player_state)
             can_do_bomb = self.strategies["bomb"].can_execute(game_state, player_state)
             can_do_reload = self.strategies["reload"].can_execute(game_state, player_state)
             can_do_treasure = self.strategies["treasure"].can_execute(game_state, player_state)
             can_do_ore_bomb = self.strategies["orebomb"].can_execute(game_state, player_state)
+            can_do_kill = self.strategies["kill"].can_execute(game_state, player_state)
 
             # Determine next action
             if can_do_treasure:
@@ -54,6 +57,8 @@ class Agent:
                 strategy_name = 'orebomb'
             elif can_do_reload:
                 strategy_name = 'reload'
+            elif can_do_kill:
+                strategy_name = 'kill'
 
             # enqueue next action sequence
             strategy = self.strategies[strategy_name]

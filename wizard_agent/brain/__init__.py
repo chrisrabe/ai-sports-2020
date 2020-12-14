@@ -7,6 +7,8 @@ from . import treasure_strategy
 from . import ore_bomb_strategy
 from . import utils
 from . import bomb_placement_strategy
+from . import kill_strategy
+from . import retreat_strategy
 
 
 def RandomStrategy():
@@ -36,5 +38,14 @@ def BombPlacementStrategy():
 def TreasureStrategy():
     return treasure_strategy.TreasureStrategy()
 
+
 def OreBombStrategy():
     return ore_bomb_strategy.OreBombStrategy()
+
+
+def KillStrategy():
+    return kill_strategy.KillStrategy()
+
+
+def RetreatStrategy():
+    return retreat_strategy.RetreatStrategy()
