@@ -20,6 +20,7 @@ def _get_nearest_ammo(location, ammo_list):
     else:
         return None
 
+
 def _get_furthest_ammo_from_opponent(opponent_location, ammo_list):
     if ammo_list and len(ammo_list) > 1:
         ammo_distance = 0
@@ -32,6 +33,7 @@ def _get_furthest_ammo_from_opponent(opponent_location, ammo_list):
         return furthest_ammo
     else:
         return None
+
 
 class ReloadStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
@@ -49,9 +51,9 @@ class ReloadStrategy(strategy.Strategy):
         # get the furthest ammo from the opponent player
         furthest_ammo_from_opponent = _get_furthest_ammo_from_opponent(opponent_location, ammos)
 
-         # navigate to the ammo
+        # navigate to the ammo
         if nearest_ammo is not None:
-            if utils.isOpponentCloser(location, opponent_location, nearest_ammo) is False:
+            if not utils.isOpponentCloser(location, opponent_location, nearest_ammo):
                 path = utils.get_shortest_path(location, nearest_ammo, game_state)
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq

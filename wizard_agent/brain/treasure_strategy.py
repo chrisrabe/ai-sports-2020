@@ -20,6 +20,7 @@ def _get_nearest_treasure(location, treasure_list):
     else:
         return None
 
+
 def _get_furthest_treasure_from_opponent(opponent_location, treasure_list):
     if treasure_list and len(treasure_list) > 1:
         treasure_distance = 0
@@ -32,6 +33,7 @@ def _get_furthest_treasure_from_opponent(opponent_location, treasure_list):
         return furthest_treasure
     else:
         return None
+
 
 class TreasureStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
@@ -50,15 +52,14 @@ class TreasureStrategy(strategy.Strategy):
 
         # navigate to the treasure
         if nearest_treasure is not None:
-            if utils.isOpponentCloser(location, opponent_location, nearest_treasure) is False:
+            if not utils.isOpponentCloser(location, opponent_location, nearest_treasure):
                 path = utils.get_shortest_path(location, nearest_treasure, game_state)
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
-            else:
-                if furthest_treasure_from_opponent is not None:
-                    path = utils.get_shortest_path(location, furthest_treasure_from_opponent, game_state)
-                    action_seq = utils.get_path_action_seq(location, path)
-                    return action_seq
+            elif furthest_treasure_from_opponent is not None:
+                path = utils.get_shortest_path(location, furthest_treasure_from_opponent, game_state)
+                action_seq = utils.get_path_action_seq(location, path)
+                return action_seq
         return [constants.ACTIONS["none"]]
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
