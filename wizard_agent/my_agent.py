@@ -28,7 +28,8 @@ class Agent:
             'treasure': brain.TreasureStrategy(),
             'orebomb': brain.OreBombStrategy(),
             'kill': brain.KillStrategy(),
-            'retreat': brain.RetreatStrategy()
+            'retreat': brain.RetreatStrategy(),
+            'smartbomb': brain.SmartBombStrategy()
         }
         self.action_queue = []
         self.ore_state = {}
@@ -40,10 +41,9 @@ class Agent:
         if not self.action_queue:
             strategy_name = "retreat"
             can_do_flee = self.strategies["flee"].can_execute(game_state, player_state)
-            can_do_bomb = self.strategies["bomb"].can_execute(game_state, player_state)
+            can_do_bomb = self.strategies["smartbomb"].can_execute(game_state, player_state)
             can_do_reload = self.strategies["reload"].can_execute(game_state, player_state)
             can_do_treasure = self.strategies["treasure"].can_execute(game_state, player_state)
-            can_do_ore_bomb = self.strategies["orebomb"].can_execute(game_state, player_state)
             can_do_kill = self.strategies["kill"].can_execute(game_state, player_state)
 
             # Determine next action
@@ -52,9 +52,7 @@ class Agent:
             elif can_do_flee:
                 strategy_name = 'flee'
             elif can_do_bomb:
-                strategy_name = 'bomb'
-            elif can_do_ore_bomb:
-                strategy_name = 'orebomb'
+                strategy_name = 'smartbomb'
             elif can_do_reload:
                 strategy_name = 'reload'
             elif can_do_kill:

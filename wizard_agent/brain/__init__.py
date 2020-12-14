@@ -9,6 +9,7 @@ from . import utils
 from . import bomb_placement_strategy
 from . import kill_strategy
 from . import retreat_strategy
+from . import smart_bomb_strategy
 
 
 def RandomStrategy():
@@ -49,3 +50,7 @@ def KillStrategy():
 
 def RetreatStrategy():
     return retreat_strategy.RetreatStrategy()
+
+
+def SmartBombStrategy():
+    return smart_bomb_strategy.SmartBombStrategy()
