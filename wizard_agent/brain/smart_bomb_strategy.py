@@ -29,8 +29,8 @@ class SmartBombStrategy(strategy.Strategy):
         self.update_ore_state(ore_blocks, exploded_bombs)
         self.prev_bombs = bombs
 
-        empty_near_soft = self.get_empty_near_blocks(soft_blocks, game_state)
-        empty_near_ore = self.get_empty_near_blocks(ore_blocks, game_state)
+        empty_near_soft = self.get_empty_near_blocks(soft_blocks)
+        empty_near_ore = self.get_empty_near_blocks(ore_blocks)
         all_empty = empty_near_soft + empty_near_ore
         urgent_ores = self.get_urgent_ores()
 
@@ -47,12 +47,15 @@ class SmartBombStrategy(strategy.Strategy):
         return [constants.ACTIONS["none"]]
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
+        self.game_state = game_state
+        self.player_state = player_state
+
         location = player_state.location
         ammo = player_state.ammo
         ore_blocks = game_state.ore_blocks
         soft_blocks = game_state.soft_blocks
-        empty_near_soft = self.get_empty_near_blocks(soft_blocks, game_state)
-        empty_near_ore = self.get_empty_near_blocks(ore_blocks, game_state)
+        empty_near_soft = self.get_empty_near_blocks(soft_blocks)
+        empty_near_ore = self.get_empty_near_blocks(ore_blocks)
         all_empty = empty_near_soft + empty_near_ore
         reachable_tiles = utils.get_reachable_tiles(location, all_empty, game_state)
         return ammo > 0 and reachable_tiles
@@ -97,9 +100,12 @@ class SmartBombStrategy(strategy.Strategy):
             if tile in self.ore_states:
                 self.ore_states[tile] -= 1
         # delete any tile that has no HP left
+        tiles_to_delete = []
         for ore, value in self.ore_states.items():
             if value <= 0:
-                del self.ore_states[ore]
+                tiles_to_delete.append(ore)
+        for tile in tiles_to_delete:
+            del self.ore_states[tile]
 
     def get_score(self, tile, empty_near_soft, empty_near_ore, urgent_ores, location):
         path = utils.get_shortest_path(location, tile, self.game_state)
