@@ -73,7 +73,10 @@ class TreasureStrategy(strategy.Strategy):
         furthest_treasure = _get_furthest_treasure_from_opponent(opponent_location, reachable_treasure)
         nearest_treasure = _get_nearest_treasure(location, reachable_treasure)
         is_opponent_closer = utils.is_opponent_closer(location, opponent_location, nearest_treasure)
-        
+
+        closest_treasure_safe = False
+        furthest_treasure_safe = False
+
         if nearest_treasure:
             closest_treasure_safe = utils.is_safe_path(location, nearest_treasure, bombs, game_state)
         if furthest_treasure:

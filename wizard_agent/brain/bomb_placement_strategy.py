@@ -35,5 +35,7 @@ class BombPlacementStrategy(strategy.Strategy):
         nearest_empty_tile = get_nearest_empty_wood_tile(game_state, player_state)
         location = player_state.location
         bombs = game_state.bombs
-        safe = utils.is_safe_path(location, nearest_empty_tile, bombs, game_state)
+        safe = False
+        if nearest_empty_tile:
+            safe = utils.is_safe_path(location, nearest_empty_tile, bombs, game_state)
         return ammo > 0 and nearest_empty_tile and safe
