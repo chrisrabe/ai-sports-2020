@@ -15,7 +15,7 @@ class KillStrategy(Strategy):
         nearest_tile = utils.get_nearest_tile(location, reachable_tiles)
         # navigate to nearest empty tile
         if nearest_tile is not None:
-            path = utils.get_shortest_path(location, nearest_tile, game_state)
+            path = utils.get_shortest_path(location, opponent, game_state)
             action_seq = utils.get_path_action_seq(location, path)
             action_seq.append(constants.ACTIONS["bomb"])
             return action_seq
