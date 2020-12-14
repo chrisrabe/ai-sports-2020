@@ -83,6 +83,9 @@ class OreBombStrategy(strategy.Strategy):
         ammo = player_state.ammo
         bombs = game_state.bombs
         ore_blocks = game_state.ore_blocks
+        if len(ore_blocks) == 0:
+            return False
+
         nearest_tile = get_nearest_empty_ore_tile(location, ore_blocks, game_state)
         safe = False
         if nearest_tile is not None:
