@@ -57,11 +57,10 @@ class ReloadStrategy(strategy.Strategy):
                 path = utils.get_shortest_path(location, nearest_ammo, game_state)
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
-            else:
-                if furthest_ammo_from_opponent is not None:
-                    path = utils.get_shortest_path(location, furthest_ammo_from_opponent, game_state)
-                    action_seq = utils.get_path_action_seq(location, path)
-                    return action_seq
+            elif furthest_ammo_from_opponent is not None:
+                path = utils.get_shortest_path(location, furthest_ammo_from_opponent, game_state)
+                action_seq = utils.get_path_action_seq(location, path)
+                return action_seq
         return [constants.ACTIONS["none"]]
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
