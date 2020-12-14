@@ -22,7 +22,7 @@ def _get_nearest_ammo(location, ammo_list):
 
 def _get_furthest_ammo_from_opponent(opponent_location, ammo_list):
     if ammo_list and len(ammo_list) > 1:
-        ammo_distance = 10
+        ammo_distance = 0
         furthest_ammo = ammo_list[0]
         for ammo in ammo_list:
             new_ammo_dist = utils.manhattan_distance(opponent_location, ammo)
@@ -52,12 +52,10 @@ class ReloadStrategy(strategy.Strategy):
          # navigate to the ammo
         if nearest_ammo is not None:
             if utils.isOpponentCloser(location, opponent_location, nearest_ammo) is False:
-                print("I am closer, Yay!")
                 path = utils.get_shortest_path(location, nearest_ammo, game_state)
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
             else:
-                print("I was not closer! I'm going to find another ammo that's far away from my opponent!")
                 if furthest_ammo_from_opponent is not None:
                     path = utils.get_shortest_path(location, furthest_ammo_from_opponent, game_state)
                     action_seq = utils.get_path_action_seq(location, path)
@@ -67,6 +65,13 @@ class ReloadStrategy(strategy.Strategy):
     def can_execute(self, game_state: object, player_state: object) -> bool:
         player_ammo = player_state.ammo
         location = player_state.location
+        list_of_opponents = game_state.opponents(player_state.id)
+        opponent_location = 0
+        for opponent in list_of_opponents:
+            opponent_location = opponent
         ammo_pickups = game_state.ammo
         ammo_in_range = utils.get_reachable_tiles(location, ammo_pickups, game_state)
-        return player_ammo == 0 and len(ammo_in_range) > 0
+        furthest_ammo = _get_furthest_ammo_from_opponent(opponent_location, ammo_in_range)
+        nearest_ammo = _get_nearest_ammo(location, ammo_in_range)
+        
+        return player_ammo < 3 and len(ammo_in_range) > 0 and nearest_ammo is not None or furthest_ammo is not None

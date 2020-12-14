@@ -22,7 +22,7 @@ def _get_nearest_treasure(location, treasure_list):
 
 def _get_furthest_treasure_from_opponent(opponent_location, treasure_list):
     if treasure_list and len(treasure_list) > 1:
-        treasure_distance = 10
+        treasure_distance = 0
         furthest_treasure = treasure_list[0]
         for treasure in treasure_list:
             new_treasure_dist = utils.manhattan_distance(opponent_location, treasure)
@@ -51,12 +51,10 @@ class TreasureStrategy(strategy.Strategy):
         # navigate to the treasure
         if nearest_treasure is not None:
             if utils.isOpponentCloser(location, opponent_location, nearest_treasure) is False:
-                print("I am closer, Yay!")
                 path = utils.get_shortest_path(location, nearest_treasure, game_state)
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
             else:
-                print("I was not closer! I'm going to find another treasure that's far away from my opponent!")
                 if furthest_treasure_from_opponent is not None:
                     path = utils.get_shortest_path(location, furthest_treasure_from_opponent, game_state)
                     action_seq = utils.get_path_action_seq(location, path)
@@ -66,5 +64,11 @@ class TreasureStrategy(strategy.Strategy):
     def can_execute(self, game_state: object, player_state: object) -> bool:
         location = player_state.location
         treasures = game_state.treasure
+        list_of_opponents = game_state.opponents(player_state.id)
+        opponent_location = 0
+        for opponent in list_of_opponents:
+            opponent_location = opponent
         reachable_treasure = utils.get_reachable_tiles(location, treasures, game_state)
-        return len(reachable_treasure) > 0
+        furthest_treasure = _get_furthest_treasure_from_opponent(opponent_location, reachable_treasure)
+        nearest_treasure = _get_nearest_treasure(location, reachable_treasure)
+        return nearest_treasure is not None or furthest_treasure is not None
