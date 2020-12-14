@@ -5,7 +5,10 @@ from . import structures
 
 ACTIONS = constants.ACTIONS
 Node = structures.Node
-
+all_tiles = []
+for row in range (0,12):
+    for col in range (0,10):
+        all_tiles.append(tuple([row,col]))
 
 def manhattan_distance(start, end):
     """
@@ -161,6 +164,7 @@ def is_walkable(tile, game_state):
     Returns true if the tile is walkable
     """
     collectible = ["a", "t"]
+    
     return not game_state.is_occupied(tile) or game_state.entity_at(tile) in collectible
 
 
@@ -316,3 +320,31 @@ def get_safe_tiles(danger_tiles, game_state):
             if empty not in danger_tiles:
                 safe_tiles.append(empty)
     return safe_tiles
+
+def ideal_tile_location(location, game_state):
+    accepted = ['sb', 'ob']
+    best_tile = [] # tile with 3 wooden or ore blocks around
+    good_tile = [] # tile with 2 wooden or ore blocks around
+    for tile in all_tiles:
+        if is_walkable(tile, game_state):
+            count = 0
+            x = tile[0]
+            y = tile[1]
+
+            tile_around = [(x, y - 1), (x, y + 1), (x - 1, y), (x + 1, y)]
+            
+            for item in tile_around:
+                if game_state.entity_at(item) in accepted:
+                    count+=1
+                    
+            if count == 3:
+                path = get_shortest_path(location, tile, game_state)
+                if path:
+                    best_tile.append(tile)
+            
+            if count == 2:
+                path = get_shortest_path(location, tile, game_state)
+                if path:
+                    good_tile.append(tile)
+            
+    return best_tile, good_tile

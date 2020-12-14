@@ -19,8 +19,16 @@ def get_nearest_empty_wood_tile(game_state, player_state):
 
 class BombPlacementStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
+        
         location = player_state.location
+        best_tiles, good_tiles = utils.ideal_tile_location(location, game_state)
         nearest_empty_tile = get_nearest_empty_wood_tile(game_state, player_state)
+        # print(best_tiles, good_tiles)
+        if best_tiles:
+            nearest_empty_tile = utils.get_nearest_tile(location, best_tiles)
+            
+        if good_tiles and not best_tiles:
+            nearest_empty_tile = utils.get_nearest_tile(location, good_tiles)
 
         # navigate to the wood_block
         if nearest_empty_tile:
