@@ -92,4 +92,4 @@ class ReloadStrategy(strategy.Strategy):
         can_reach_furthest_ammo = furthest_ammo is not None and furthest_ammo_safe
         can_reach_any_ammo = can_reach_furthest_ammo or can_reach_nearest_ammo
 
-        return player_ammo < 3 and can_reach_any_ammo
+        return player_ammo < 10 and can_reach_any_ammo
