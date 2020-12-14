@@ -30,4 +30,4 @@ class KillStrategy(Strategy):
         surrounding_tiles = utils.get_surrounding_empty_tiles(opponent, game_state)
         reachable_tiles = utils.get_reachable_tiles(location, surrounding_tiles, game_state)
         # execute when player has ammo and there's a reachable tile to opponent
-        return ammo > 3 and reachable_tiles
+        return ammo > 0 and reachable_tiles

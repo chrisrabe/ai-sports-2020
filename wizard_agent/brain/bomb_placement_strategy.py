@@ -32,6 +32,10 @@ class BombPlacementStrategy(strategy.Strategy):
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
         ammo = player_state.ammo
+
+        if not game_state.soft_blocks:
+            return False
+
         nearest_empty_tile = get_nearest_empty_wood_tile(game_state, player_state)
         location = player_state.location
         bombs = game_state.bombs
