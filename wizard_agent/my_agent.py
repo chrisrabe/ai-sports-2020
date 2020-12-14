@@ -57,7 +57,7 @@ class Agent:
                 strategy_name = 'orebomb'
             elif can_do_reload:
                 strategy_name = 'reload'
-            elif can_do_kill:
+            if can_do_kill:
                 strategy_name = 'kill'
 
             # enqueue next action sequence
