@@ -4,7 +4,7 @@ TEMPLATE for creating your own Agent to compete in
 For more info and resources, check out: https://bit.ly/aisportschallenge
 
 BIO:
-Agent that values hunting the other player and killing them. Uses Q-Learning
+Values finding treasure and destroying blocks. Uses Q-Learning
 to find the optimal strategy to achieve its goal.
 
 """
