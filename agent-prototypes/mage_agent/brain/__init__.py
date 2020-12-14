@@ -2,7 +2,6 @@ from . import random_strategy
 from . import flee_strategy
 from . import move_strategy
 from . import basic_bomb_strategy
-from . import utils
 
 
 def RandomStrategy():
