@@ -329,7 +329,9 @@ def safe_escape(location, game_state):
             tile = tuple([row,col])
             if tile not in blast_area:
                 if is_walkable(tile, game_state):
-                    all_safe_walkable_tiles.append(tile)
+                    path = get_shortest_path(location, tile, game_state)
+                    if path:
+                        all_safe_walkable_tiles.append(tile)
     
     nearest_tile = get_nearest_tile(location, all_safe_walkable_tiles)
     return nearest_tile

@@ -25,14 +25,13 @@ class BombPlacementStrategy(strategy.Strategy):
         # navigate to the wood_block
         if nearest_empty_tile:
             safe_tile_to_escape_to = utils.safe_escape(nearest_empty_tile, game_state)
-            if safe_tile_to_escape_to is not None:
-                path = utils.get_shortest_path(location, nearest_empty_tile, game_state)
-                action_seq = utils.get_path_action_seq(location, path)
-                action_seq.append(constants.ACTIONS["bomb"])
-                escape_path = utils.get_shortest_path(nearest_empty_tile, safe_tile_to_escape_to, game_state)
-                escape_seq = utils.get_path_action_seq(nearest_empty_tile, escape_path)
-                action_seq.append(escape_seq)
-                return action_seq
+            path = utils.get_shortest_path(location, nearest_empty_tile, game_state)
+            action_seq = utils.get_path_action_seq(location, path)
+            action_seq.append(constants.ACTIONS["bomb"])
+            escape_path = utils.get_shortest_path(nearest_empty_tile, safe_tile_to_escape_to, game_state)
+            escape_seq = utils.get_path_action_seq(nearest_empty_tile, escape_path)
+            action_seq.append(escape_seq)
+            return action_seq
         return [constants.ACTIONS["none"]]
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
@@ -45,6 +44,8 @@ class BombPlacementStrategy(strategy.Strategy):
         location = player_state.location
         bombs = game_state.bombs
         safe = False
+        safe_tile_to_escape_to = False
         if nearest_empty_tile:
             safe = utils.is_safe_path(location, nearest_empty_tile, bombs, game_state)
-        return ammo > 0 and nearest_empty_tile and safe
+            safe_tile_to_escape_to = utils.safe_escape(nearest_empty_tile, game_state)
+        return ammo > 0 and nearest_empty_tile and safe and safe_tile_to_escape_to
