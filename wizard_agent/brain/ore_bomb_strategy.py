@@ -61,21 +61,29 @@ class OreBombStrategy(strategy.Strategy):
         if urgent_ores:
             # grab the nearest empty tile to put bomb
             nearest_tile = get_nearest_empty_ore_tile(location, urgent_ores, game_state)
+            safe_tile_to_escape_to = utils.safe_escape(nearest_tile, game_state)
             nearest_ore = utils.get_nearest_tile(nearest_tile, urgent_ores)
             # remove ore from ore_state
             self.ore_state.pop(nearest_ore)
             path = utils.get_shortest_path(location, nearest_tile, game_state)
             action_seq = utils.get_path_action_seq(location, path)
             action_seq.append(ACTIONS["bomb"])
+            escape_path = utils.get_shortest_path(nearest_tile, safe_tile_to_escape_to, game_state)
+            escape_seq = utils.get_path_action_seq(nearest_tile, escape_path)
+            action_seq = action_seq + escape_seq
             return action_seq
         else:
             nearest_tile = get_nearest_empty_ore_tile(location, ore_blocks, game_state)
+            safe_tile_to_escape_to = utils.safe_escape(nearest_tile, game_state)
             nearest_ore = utils.get_nearest_tile(nearest_tile, ore_blocks)
             # decrease ore state value
             self.ore_state[nearest_ore] -= 1
             path = utils.get_shortest_path(location, nearest_tile, game_state)
             action_seq = utils.get_path_action_seq(location, path)
             action_seq.append(ACTIONS["bomb"])
+            escape_path = utils.get_shortest_path(nearest_tile, safe_tile_to_escape_to, game_state)
+            escape_seq = utils.get_path_action_seq(nearest_tile, escape_path)
+            action_seq = action_seq + escape_seq
             return action_seq
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
@@ -88,6 +96,8 @@ class OreBombStrategy(strategy.Strategy):
 
         nearest_tile = get_nearest_empty_ore_tile(location, ore_blocks, game_state)
         safe = False
+        safe_tile_to_escape_to = False
         if nearest_tile is not None:
             safe = utils.is_safe_path(location, nearest_tile, bombs, game_state)
-        return ammo > 0 and nearest_tile and safe
+            safe_tile_to_escape_to = utils.safe_escape(nearest_tile, game_state)
+        return ammo > 0 and nearest_tile and safe and safe_tile_to_escape_to
