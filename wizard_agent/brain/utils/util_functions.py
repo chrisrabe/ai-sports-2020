@@ -60,7 +60,7 @@ def get_safest_tile(location, tiles, bombs):
     Given a list of tiles and bombs, find the tile that's safest to move to
     """
 
-    bomb_distance = 10
+    bomb_distance = 1000
     closest_bomb = bombs[0]
 
     for bomb in bombs:
@@ -234,7 +234,7 @@ def get_blast_zone(bomb, game_state):
 
 def get_nearest_tile(location, tiles):
     if tiles:
-        tile_dist = 10
+        tile_dist = 1000
         closest_tile = tiles[0]
         for tile in tiles:
             new_dist = manhattan_distance(location, tile)
@@ -316,3 +316,21 @@ def get_safe_tiles(danger_tiles, game_state):
             if empty not in danger_tiles:
                 safe_tiles.append(empty)
     return safe_tiles
+
+def safe_escape(location, game_state):
+    all_safe_walkable_tiles = []
+    bombs = game_state.bombs
+    blast_area = []
+    for bomb in bombs:
+        blast_area.append(get_blast_zone(bomb, game_state))
+    blast_area.append(get_blast_zone(location, game_state)) # putting the bomb on the bot's current location
+    for row in range(0,12):
+        for col in range(0.10):
+            tile = tuple([row,col])
+            if tile not in blast_area:
+                if is_walkable(tile, game_state):
+                    all_safe_walkable_tiles.append(tile)
+    
+    nearest_tile = get_nearest_tile(location, all_safe_walkable_tiles)
+    return nearest_tile
+    

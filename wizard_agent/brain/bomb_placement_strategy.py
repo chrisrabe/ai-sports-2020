@@ -24,10 +24,15 @@ class BombPlacementStrategy(strategy.Strategy):
 
         # navigate to the wood_block
         if nearest_empty_tile:
-            path = utils.get_shortest_path(location, nearest_empty_tile, game_state)
-            action_seq = utils.get_path_action_seq(location, path)
-            action_seq.append(constants.ACTIONS["bomb"])
-            return action_seq
+            safe_tile_to_escape_to = utils.safe_escape(nearest_empty_tile, game_state)
+            if safe_tile_to_escape_to is not None:
+                path = utils.get_shortest_path(location, nearest_empty_tile, game_state)
+                action_seq = utils.get_path_action_seq(location, path)
+                action_seq.append(constants.ACTIONS["bomb"])
+                escape_path = utils.get_shortest_path(nearest_empty_tile, safe_tile_to_escape_to, game_state)
+                escape_seq = utils.get_path_action_seq(nearest_empty_tile, escape_path)
+                action_seq.append(escape_seq)
+                return action_seq
         return [constants.ACTIONS["none"]]
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
