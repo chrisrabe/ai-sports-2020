@@ -30,7 +30,7 @@ class BombPlacementStrategy(strategy.Strategy):
             action_seq.append(constants.ACTIONS["bomb"])
             escape_path = utils.get_shortest_path(nearest_empty_tile, safe_tile_to_escape_to, game_state)
             escape_seq = utils.get_path_action_seq(nearest_empty_tile, escape_path)
-            action_seq.append(escape_seq)
+            action_seq = action_seq + escape_seq
             return action_seq
         return [constants.ACTIONS["none"]]
 
