@@ -326,7 +326,7 @@ def safe_escape(location, game_state):
         blast_area = blast_area + blast_zone
     blast_area = blast_area + get_blast_zone(location, game_state) # putting the bomb on the bot's current location
     for row in range(0,12):
-        for col in range(0.10):
+        for col in range(0,10):
             tile = tuple([row,col])
             if tile not in blast_area:
                 if is_walkable(tile, game_state):
