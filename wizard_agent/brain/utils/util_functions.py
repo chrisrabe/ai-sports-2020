@@ -109,6 +109,12 @@ def get_shortest_path(start, end, game_state):
     # create a list for all nodes to visit and have been visited
     queue = []
     visited = []
+    bombs = game_state.bombs
+    blast_tiles = []
+    
+    for bomb in bombs:
+        blast_area = get_blast_zone(bomb, game_state)
+        blast_tiles += blast_area
 
     # create a start node and end node
     start_node = Node(start, None)
@@ -139,6 +145,9 @@ def get_shortest_path(start, end, game_state):
         neighbours = get_surrounding_tiles(current_node.position, game_state)
 
         for tile in neighbours:
+            if tile in blast_tiles:
+                continue # skip if blast tile
+            
             if not is_walkable(tile, game_state):
                 continue  # skip if not walkable
 
