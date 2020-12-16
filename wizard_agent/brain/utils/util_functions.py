@@ -316,3 +316,27 @@ def get_safe_tiles(danger_tiles, game_state):
             if empty not in danger_tiles:
                 safe_tiles.append(empty)
     return safe_tiles
+
+
+def get_escape_matrix(game_state):
+    size = game_state.size
+    width = size[0]
+    height = size[1]
+    escape_paths = [0] * (width * height)
+    for y in range(height):
+        for x in range(width):
+            tile = (x, y)
+            idx = width * y + x
+            if is_walkable(tile, game_state):
+                empty_tiles = get_surrounding_empty_tiles(tile, game_state)
+                escape_paths[idx] = empty_tiles
+            else:
+                escape_paths[idx] = -1
+    return escape_paths
+
+
+def get_matrix_val_for_tile(tile, matrix, map_width):
+    x = tile[0]
+    y = tile[1]
+    idx = map_width * y + x
+    return matrix[idx]
