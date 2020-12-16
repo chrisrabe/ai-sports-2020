@@ -368,3 +368,29 @@ def get_matrix_val_for_tile(tile, matrix, map_width):
     y = tile[1]
     idx = map_width * y + x
     return matrix[idx]
+
+
+def get_tile_from_move(location, move):
+    x = location[0]
+    y = location[1]
+
+    if move == ACTIONS["down"]:
+        return tuple((x, y - 1))
+    elif move == ACTIONS["left"]:
+        return tuple((x - 1, y))
+    elif move == ACTIONS["up"]:
+        return tuple((x, y + 1))
+    elif move == ACTIONS["right"]:
+        return tuple((x + 1, y))
+    else:
+        return tuple((x, y))
+
+
+def is_movement(action):
+    actions = [
+        ACTIONS["up"],
+        ACTIONS["down"],
+        ACTIONS["right"],
+        ACTIONS["left"]
+    ]
+    return action in actions
