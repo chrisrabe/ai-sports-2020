@@ -39,7 +39,7 @@ class SmartCollectionStrategy(strategy.Strategy):
 
         for bomb in bombs:
         	blast_tiles = utils.get_blast_zone(bomb, self.game_state)
-        	blast_zone.append(blast_tiles) 
+        	blast_zone += blast_tiles
 
         ammo_blocks = game_state.ammo
         treasure_blocks = game_state.treasure

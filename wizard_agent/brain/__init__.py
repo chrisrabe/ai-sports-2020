@@ -27,18 +27,8 @@ def MoveStrategy():
 def BasicBombStrategy():
     return basic_bomb_strategy.BasicBombStrategy()
 
-
-def ReloadStrategy():
-    return reload_strategy.ReloadStrategy()
-
-
 def BombPlacementStrategy():
     return bomb_placement_strategy.BombPlacementStrategy()
-
-
-def TreasureStrategy():
-    return treasure_strategy.TreasureStrategy()
-
 
 def OreBombStrategy():
     return ore_bomb_strategy.OreBombStrategy()
