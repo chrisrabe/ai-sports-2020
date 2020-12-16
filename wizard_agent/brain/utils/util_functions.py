@@ -299,9 +299,10 @@ def is_safe_path(location, target_location, bombs, game_state):
     for bomb in bombs:
         blast_tiles = get_blast_zone(bomb, game_state)
         all_blast.append(blast_tiles)
-    for coord in path:
-        if coord in all_blast:
-            return False
+    if path:
+        for coord in path:
+            if coord in all_blast:
+                return False
     return True
 
 
