@@ -39,9 +39,13 @@ class SmartBombStrategy(strategy.Strategy):
 
         # navigate to ideal tile
         if ideal_tile is not None:
+            safe_tile_to_escape_to = utils.safe_escape(ideal_tile, game_state)
             path = utils.get_shortest_path(location, ideal_tile, game_state)
             action_seq = utils.get_path_action_seq(location, path)
             action_seq.append(constants.ACTIONS["bomb"])
+            escape_path = utils.get_shortest_path(ideal_tile, safe_tile_to_escape_to, game_state)
+            escape_seq = utils.get_path_action_seq(ideal_tile, escape_path)
+            action_seq = action_seq + escape_seq
             return action_seq
 
         return [constants.ACTIONS["none"]]
@@ -54,11 +58,23 @@ class SmartBombStrategy(strategy.Strategy):
         ammo = player_state.ammo
         ore_blocks = game_state.ore_blocks
         soft_blocks = game_state.soft_blocks
+        bombs = game_state.bombs
         empty_near_soft = self.get_empty_near_blocks(soft_blocks)
         empty_near_ore = self.get_empty_near_blocks(ore_blocks)
         all_empty = empty_near_soft + empty_near_ore
-        reachable_tiles = utils.get_reachable_tiles(location, all_empty, game_state)
-        return ammo > 0 and reachable_tiles
+        # reachable_tiles = utils.get_reachable_tiles(location, all_empty, game_state) --> safe_escape checked for reachability
+        urgent_ores = self.get_urgent_ores()
+
+        # retrieve the best tile
+        ideal_tile = self.get_ideal_tile(all_empty, empty_near_soft, empty_near_ore, urgent_ores, location)
+        
+        safe = False
+        safe_tile_to_escape_to = False
+        if ideal_tile is not None:
+            safe = utils.is_safe_path(location, ideal_tile, bombs, game_state)
+            safe_tile_to_escape_to = utils.safe_escape(ideal_tile, game_state)
+        
+        return ammo > 0 and ideal_tile and safe and safe_tile_to_escape_to
 
     def get_ideal_tile(self, all_empty, empty_near_soft, empty_near_ore, urgent_ores, location):
         opponent_list = self.game_state.opponents(self.player_state.id)
