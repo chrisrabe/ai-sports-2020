@@ -98,11 +98,14 @@ def move_to_tile(location, tile):
         return ACTIONS["none"]
 
 
-def get_shortest_path(start, end, game_state, blast_tiles=[]):
+def get_shortest_path(start, end, game_state, blast_tiles = []):
     """
     Finds the shortest path from the start node to the end node.
     Returns an array of (x,y) tuples. Uses A* search algorithm
     """
+    if start is None or end is None:
+        return None
+
     # create a list for all nodes to visit and have been visited
     queue = []
     visited = []
@@ -138,6 +141,7 @@ def get_shortest_path(start, end, game_state, blast_tiles=[]):
         for tile in neighbours:
             if tile in blast_tiles:
                 continue  # skip if blast tile
+
             if not is_walkable(tile, game_state):
                 continue  # skip if not walkable
 
