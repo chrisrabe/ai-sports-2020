@@ -41,7 +41,6 @@ class Agent:
         }
         self.action_queue = []
 
-        self.ore_state = {}
         self.end_tick = 1800
         self.step = 0
 
