@@ -6,7 +6,6 @@ from . import structures
 ACTIONS = constants.ACTIONS
 Node = structures.Node
 
-
 def manhattan_distance(start, end):
     """
     returns the manhattan distance between two tiles, calculated as:

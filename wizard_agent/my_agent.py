@@ -13,6 +13,9 @@ This is our agent. He does things. Yay
 # import pandas as pd
 # import sklearn
 from . import brain
+import csv
+from datetime import datetime
+
 
 utils = brain.utils.util_functions
 
@@ -32,6 +35,18 @@ class Agent:
         }
         self.action_queue = []
         self.ore_state = {}
+        self.end_tick = 1800
+        self.step = 0
+
+        # DEBUG
+        self.debug_mode = True
+        self.filename =  datetime.now().strftime('log/log_%H_%M_%d_%m_%Y.csv')
+
+
+
+    def save_action_log(self, step, actions, player_state):
+        with open(self.filename, 'a+', newline = '') as f:
+            f.write('Agent ' + str(player_state.id) + ' | Tick: {0} - {1}\n'.format(step, actions))
 
     def next_move(self, game_state, player_state):
         """This method is called each time your Agent is required to choose an action"""
@@ -56,7 +71,19 @@ class Agent:
             # enqueue next action sequence
             strategy = self.strategies[strategy_name]
             actions = strategy.execute(game_state, player_state)
+            
+            # log bot action
+            if self.debug_mode:
+                if self.step <= 1800:
+                    self.save_action_log(self.step, actions, player_state)
+                    self.step += 1
+ 
+
+            
+
             self.action_queue = self.action_queue + actions
+
+
 
         # execute the first action
         return self.action_queue.pop(0)
