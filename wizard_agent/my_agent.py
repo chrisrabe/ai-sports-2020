@@ -24,12 +24,11 @@ class Agent:
             'flee': brain.FleeStrategy(),
             'move': brain.MoveStrategy(),
             'bomb': brain.BombPlacementStrategy(),
-            'reload': brain.ReloadStrategy(),
-            'treasure': brain.TreasureStrategy(),
             'orebomb': brain.OreBombStrategy(),
             'kill': brain.KillStrategy(),
             'retreat': brain.RetreatStrategy(),
-            'smartbomb': brain.SmartBombStrategy()
+            'smartbomb': brain.SmartBombStrategy(),
+            'smartcollect' : brain.SmartCollectionStrategy(),
         }
         self.action_queue = []
         self.ore_state = {}
@@ -42,19 +41,15 @@ class Agent:
             strategy_name = "retreat"
             can_do_flee = self.strategies["flee"].can_execute(game_state, player_state)
             can_do_bomb = self.strategies["smartbomb"].can_execute(game_state, player_state)
-            can_do_reload = self.strategies["reload"].can_execute(game_state, player_state)
-            can_do_treasure = self.strategies["treasure"].can_execute(game_state, player_state)
             can_do_kill = self.strategies["kill"].can_execute(game_state, player_state)
-
+            can_do_collect = self.strategies["smartcollect"].can_execute(game_state,player_state)
             # Determine next action
-            if can_do_treasure:
-                strategy_name = 'treasure'
-            elif can_do_flee:
+            if can_do_flee:
                 strategy_name = 'flee'
             elif can_do_bomb:
                 strategy_name = 'smartbomb'
-            elif can_do_reload:
-                strategy_name = 'reload'
+            elif can_do_collect:
+                strategy_name = 'smartcollect'
             elif can_do_kill:
                 strategy_name = 'kill'
 

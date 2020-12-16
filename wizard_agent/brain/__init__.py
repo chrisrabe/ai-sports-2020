@@ -10,7 +10,7 @@ from . import bomb_placement_strategy
 from . import kill_strategy
 from . import retreat_strategy
 from . import smart_bomb_strategy
-
+from . import smart_collection_strategy
 
 def RandomStrategy():
     return random_strategy.RandomStrategy()
@@ -27,18 +27,8 @@ def MoveStrategy():
 def BasicBombStrategy():
     return basic_bomb_strategy.BasicBombStrategy()
 
-
-def ReloadStrategy():
-    return reload_strategy.ReloadStrategy()
-
-
 def BombPlacementStrategy():
     return bomb_placement_strategy.BombPlacementStrategy()
-
-
-def TreasureStrategy():
-    return treasure_strategy.TreasureStrategy()
-
 
 def OreBombStrategy():
     return ore_bomb_strategy.OreBombStrategy()
@@ -54,3 +44,6 @@ def RetreatStrategy():
 
 def SmartBombStrategy():
     return smart_bomb_strategy.SmartBombStrategy()
+
+def SmartCollectionStrategy():
+    return smart_collection_strategy.SmartCollectionStrategy()
