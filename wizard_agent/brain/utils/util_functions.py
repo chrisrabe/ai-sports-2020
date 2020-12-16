@@ -103,6 +103,9 @@ def get_shortest_path(start, end, game_state):
     Finds the shortest path from the start node to the end node.
     Returns an array of (x,y) tuples. Uses A* search algorithm
     """
+    if start is None or end is None:
+        return None
+
     # create a list for all nodes to visit and have been visited
     queue = []
     visited = []
@@ -145,10 +148,9 @@ def get_shortest_path(start, end, game_state):
                 continue  # skip if visited
 
             # generate heuristics
-            if neighbour:
-                neighbour.dist_to_start = manhattan_distance(neighbour.position, start_node.position)
-                neighbour.dist_to_goal = manhattan_distance(neighbour.position, goal_node.position)
-                neighbour.total_cost = neighbour.dist_to_start + neighbour.dist_to_goal
+            neighbour.dist_to_start = manhattan_distance(neighbour.position, start_node.position)
+            neighbour.dist_to_goal = manhattan_distance(neighbour.position, goal_node.position)
+            neighbour.total_cost = neighbour.dist_to_start + neighbour.dist_to_goal
 
             # check if neighbour is in the open list and if it has a lower total value
             if can_enqueue(queue, neighbour):
