@@ -48,11 +48,10 @@ class Agent:
                 strategy_name = 'flee'
             elif can_do_bomb:
                 strategy_name = 'smartbomb'
-            elif can_do_kill:
-                strategy_name = 'kill'
             elif can_do_collect:
                 strategy_name = 'smartcollect'
-
+            elif can_do_kill:
+                strategy_name = 'kill'
 
             # enqueue next action sequence
             strategy = self.strategies[strategy_name]
