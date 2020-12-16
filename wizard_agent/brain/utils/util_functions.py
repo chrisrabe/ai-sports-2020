@@ -145,9 +145,10 @@ def get_shortest_path(start, end, game_state):
                 continue  # skip if visited
 
             # generate heuristics
-            neighbour.dist_to_start = manhattan_distance(neighbour.position, start_node.position)
-            neighbour.dist_to_goal = manhattan_distance(neighbour.position, goal_node.position)
-            neighbour.total_cost = neighbour.dist_to_start + neighbour.dist_to_goal
+            if neighbour:
+                neighbour.dist_to_start = manhattan_distance(neighbour.position, start_node.position)
+                neighbour.dist_to_goal = manhattan_distance(neighbour.position, goal_node.position)
+                neighbour.total_cost = neighbour.dist_to_start + neighbour.dist_to_goal
 
             # check if neighbour is in the open list and if it has a lower total value
             if can_enqueue(queue, neighbour):
