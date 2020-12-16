@@ -52,10 +52,9 @@ class CombatStrategy(Strategy):
         self.update_bomb_states()
         # check if it can execute any aggressive
         enemy_escape = self.get_escape_path(opponent)  # number of escape paths opponent has
-        dist_from_enemy = utils.manhattan_distance(location, opponent)
         can_chain_bomb = self.can_chain_bomb(location)
         can_fake_out = self.can_fake_out(location, opponent)
-        self.has_advantage = enemy_escape <= 2 or dist_from_enemy <= 2 or can_chain_bomb or can_fake_out
+        self.has_advantage = enemy_escape <= 2 or can_chain_bomb or can_fake_out
 
         return True
 
