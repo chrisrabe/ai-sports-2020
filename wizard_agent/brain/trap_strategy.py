@@ -22,3 +22,6 @@ class TrapStrategy(Strategy):
 
     def update_fields(self, new_fields):
         self.fields = new_fields
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True

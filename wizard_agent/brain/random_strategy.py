@@ -26,3 +26,6 @@ class RandomStrategy(strategy.Strategy):
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
         return True
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True

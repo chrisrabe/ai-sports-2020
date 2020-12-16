@@ -101,3 +101,6 @@ class OreBombStrategy(strategy.Strategy):
             safe = utils.is_safe_path(location, nearest_tile, bombs, game_state)
             safe_tile_to_escape_to = utils.safe_escape(nearest_tile, game_state)
         return ammo > 0 and nearest_tile and safe and safe_tile_to_escape_to
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True

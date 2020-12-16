@@ -29,7 +29,7 @@ class SmartCollectionStrategy(strategy.Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
         self.game_state = game_state
         self.player_state = player_state
-        
+
         location = player_state.location
 
         # determine if ammo/treasure bomb is within blast zone
@@ -38,13 +38,13 @@ class SmartCollectionStrategy(strategy.Strategy):
         blast_zone = []
 
         for bomb in bombs:
-        	blast_tiles = utils.get_blast_zone(bomb, self.game_state)
-        	blast_zone += blast_tiles
+            blast_tiles = utils.get_blast_zone(bomb, self.game_state)
+            blast_zone += blast_tiles
 
         ammo_blocks = game_state.ammo
         treasure_blocks = game_state.treasure
         all_location = ammo_blocks + treasure_blocks
- 		
+
         # check if tile in blast zone
         safe_location = [tile for tile in all_location if tile not in blast_zone]
 
@@ -58,7 +58,7 @@ class SmartCollectionStrategy(strategy.Strategy):
             return action_seq
 
         return [constants.ACTIONS["none"]]
-    
+
     def can_execute(self, game_state: object, player_state: object) -> bool:
         self.game_state = game_state
         self.player_state = player_state
@@ -72,6 +72,8 @@ class SmartCollectionStrategy(strategy.Strategy):
         reachable_tiles = utils.get_reachable_tiles(location, all_location, game_state)
         return ammo < 5 and reachable_tiles
 
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True
 
     def get_ideal_tile(self, all_location, ammo_blocks, treasure_blocks, location):
         opponent_list = self.game_state.opponents(self.player_state.id)
@@ -113,5 +115,3 @@ class SmartCollectionStrategy(strategy.Strategy):
             score += self.treasure_priority
 
         return score
-
-

@@ -32,3 +32,6 @@ class KillStrategy(Strategy):
         reachable_tiles = utils.get_reachable_tiles(location, surrounding_tiles, game_state)
         # execute when player has ammo and there's a reachable tile to opponent
         return ammo > 0 and reachable_tiles
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True

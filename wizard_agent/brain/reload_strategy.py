@@ -93,3 +93,6 @@ class ReloadStrategy(strategy.Strategy):
         can_reach_any_ammo = can_reach_furthest_ammo or can_reach_nearest_ammo
 
         return player_ammo < 10 and can_reach_any_ammo
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True

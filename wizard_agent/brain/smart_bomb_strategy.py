@@ -62,7 +62,6 @@ class SmartBombStrategy(strategy.Strategy):
         empty_near_soft = self.get_empty_near_blocks(soft_blocks)
         empty_near_ore = self.get_empty_near_blocks(ore_blocks)
         all_empty = empty_near_soft + empty_near_ore
-        # reachable_tiles = utils.get_reachable_tiles(location, all_empty, game_state) --> safe_escape checked for reachability
         urgent_ores = self.get_urgent_ores()
 
         # retrieve the best tile
@@ -75,6 +74,9 @@ class SmartBombStrategy(strategy.Strategy):
             safe_tile_to_escape_to = utils.safe_escape(ideal_tile, game_state)
         
         return ammo > 0 and ideal_tile and safe and safe_tile_to_escape_to
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True
 
     def get_ideal_tile(self, all_empty, empty_near_soft, empty_near_ore, urgent_ores, location):
         opponent_list = self.game_state.opponents(self.player_state.id)

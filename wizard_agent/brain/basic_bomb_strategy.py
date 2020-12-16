@@ -13,3 +13,6 @@ class BasicBombStrategy(strategy.Strategy):
     def can_execute(self, game_state: object, player_state: object) -> bool:
         ammo = player_state.ammo
         return ammo > 0
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True

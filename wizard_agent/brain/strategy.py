@@ -16,3 +16,9 @@ class Strategy:
         Returns whether or not the strategy can execute
         """
         pass
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        """
+        Returns whether the current strategy is still valid
+        """
+        pass

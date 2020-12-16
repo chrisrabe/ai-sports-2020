@@ -27,3 +27,6 @@ class FakeOutStrategy(Strategy):
     def get_escape_path(self, tile):
         empty_tiles = utils.get_surrounding_empty_tiles(tile, self.game_state)
         return len(empty_tiles)
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True

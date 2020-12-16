@@ -28,12 +28,18 @@ class Agent:
             'kill': brain.KillStrategy(),
             'retreat': brain.RetreatStrategy(),
             'smartbomb': brain.SmartBombStrategy(),
-            'smartcollect' : brain.SmartCollectionStrategy(),
+            'smartcollect': brain.SmartCollectionStrategy(),
         }
         self.action_queue = []
+        self.last_strategy = None
 
     def next_move(self, game_state, player_state):
         """This method is called each time your Agent is required to choose an action"""
+        next_action = None
+        if self.action_queue:
+            next_action = self.action_queue.pop(0)
+            # is next tile still reachable?
+            # is target still there?
 
         # if queue is empty, get strategy
         if not self.action_queue:
@@ -41,7 +47,7 @@ class Agent:
             can_do_flee = self.strategies["flee"].can_execute(game_state, player_state)
             can_do_bomb = self.strategies["smartbomb"].can_execute(game_state, player_state)
             can_do_kill = self.strategies["kill"].can_execute(game_state, player_state)
-            can_do_collect = self.strategies["smartcollect"].can_execute(game_state,player_state)
+            can_do_collect = self.strategies["smartcollect"].can_execute(game_state, player_state)
             # Determine next action
             if can_do_flee:
                 strategy_name = 'flee'
@@ -58,4 +64,4 @@ class Agent:
             self.action_queue = self.action_queue + actions
 
         # execute the first action
-        return self.action_queue.pop(0)
+        return next_action

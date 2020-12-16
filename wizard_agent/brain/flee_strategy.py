@@ -111,3 +111,6 @@ class FleeStrategy(strategy.Strategy):
         bombs_in_range = utils.get_bombs_in_range(location, bombs)
         dangerous_tiles = get_danger_zones(bombs_in_range, game_state)
         return len(bombs_in_range) > 0 and location in dangerous_tiles
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True

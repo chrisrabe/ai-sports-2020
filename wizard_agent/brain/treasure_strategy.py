@@ -55,7 +55,6 @@ class TreasureStrategy(strategy.Strategy):
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
 
-
         if furthest_treasure_from_opponent is not None:
             path = utils.get_shortest_path(location, furthest_treasure_from_opponent, game_state)
             action_seq = utils.get_path_action_seq(location, path)
@@ -81,8 +80,11 @@ class TreasureStrategy(strategy.Strategy):
             closest_treasure_safe = utils.is_safe_path(location, nearest_treasure, bombs, game_state)
         if furthest_treasure:
             furthest_treasure_safe = utils.is_safe_path(location, furthest_treasure, bombs, game_state)
-        
+
         can_reach_nearest_treasure = nearest_treasure is not None and not is_opponent_closer and closest_treasure_safe
         can_reach_furthest_treasure = furthest_treasure is not None and not is_opponent_closer and furthest_treasure_safe
-        
+
         return can_reach_nearest_treasure or can_reach_furthest_treasure
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True

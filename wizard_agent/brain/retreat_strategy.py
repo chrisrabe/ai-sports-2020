@@ -42,5 +42,8 @@ class RetreatStrategy(Strategy):
         danger_zones = get_opponent_danger_zone(opponent, game_state)
         return location in danger_zones
 
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True
+
     def update_fields(self, new_fields):
         self.fields = new_fields

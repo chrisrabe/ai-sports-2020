@@ -65,6 +65,10 @@ class CombatStrategy(Strategy):
         })
 
         return False  # TODO modify this in future
+
+    def is_valid(self, game_state: object, player_state: object) -> bool:
+        return True
+
     # Helper functions
 
     def update_bomb_states(self):
