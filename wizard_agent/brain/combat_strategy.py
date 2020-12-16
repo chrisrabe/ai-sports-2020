@@ -4,7 +4,7 @@ from .strategy import Strategy
 from .utils import util_functions as utils, constants
 from .fake_out_strategy import FakeOutStrategy
 from .chain_bomb_strategy import ChainBombStrategy
-from .kill_strategy import KillStrategy
+from .close_combat_strategy import CloseCombatStrategy
 from .trap_strategy import TrapStrategy
 from .retreat_strategy import RetreatStrategy
 
@@ -19,7 +19,7 @@ class CombatStrategy(Strategy):
         self.strategies = {
             'fakeout': FakeOutStrategy(),
             'chainbomb': ChainBombStrategy(),
-            'kill': KillStrategy(),
+            'closecombat': CloseCombatStrategy(),
             'trap': TrapStrategy(),
             'retreat': RetreatStrategy()
         }
@@ -32,14 +32,14 @@ class CombatStrategy(Strategy):
         strategy_name = "retreat"
         if ammo > 0:  # can be aggressive
             can_do_trap = self.strategies["trap"].can_execute(game_state, player_state)
-            can_do_kill = self.strategies["kill"].can_execute(game_state, player_state)
+            can_do_closecombat = self.strategies["closecombat"].can_execute(game_state, player_state)
             can_do_fakeout = self.strategies["fakeout"].can_execute(game_state, player_state)
             can_do_chainbomb = self.strategies["chainbomb"].can_execute(game_state, player_state)
 
             if can_do_trap:
                 strategy_name = "trap"
-            elif can_do_kill:
-                strategy_name = "kill"
+            elif can_do_closecombat:
+                strategy_name = "closecombat"
             elif can_do_fakeout:
                 strategy_name = "fakeout"
             elif can_do_chainbomb:
