@@ -25,12 +25,23 @@ class ComboKillStrategy(Strategy):
                 action_seq.append(constants.ACTIONS["bomb"])
                 new_surrounding_tiles = utils.get_surrounding_empty_tiles(location, game_state)
                 reachable_tiles = utils.get_reachable_tiles(location, new_surrounding_tiles, game_state)
-                new_nearest_tile = utils.get_nearest_tile(location, reachable_tiles)
+                
+                tile_check = {}
+
+                for tile in reachable_tiles:
+                    empty_tile = utils.get_surrounding_empty_tiles(tile, game_state)
+                    tile_check[tile] = len(empty_tile)
+
+                tile_with_most_empty = max(tile_check, key = tile_check.get)
+                print('Agent ' + str(player_state.id) + ' -- ' + str(tile_with_most_empty))
                 # navigate to nearest empty tile
-                if new_nearest_tile is not None:
-                    path = utils.get_shortest_path(location, new_nearest_tile, game_state)
+                if tile_with_most_empty is not None:
+                    path = utils.get_shortest_path(location, tile_with_most_empty, game_state)
                     next_action_seq = utils.get_path_action_seq(location, path)
+                    location = tile_with_most_empty
+
                 action_seq += next_action_seq
+
             return action_seq
         return [constants.ACTIONS["none"]]
 
