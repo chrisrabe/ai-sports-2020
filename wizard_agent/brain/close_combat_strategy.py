@@ -4,7 +4,7 @@ from .strategy import Strategy
 from .utils import util_functions as utils, constants
 
 
-class KillStrategy(Strategy):
+class CloseCombatStrategy(Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
         opponent_list = game_state.opponents(player_state.id)
@@ -29,5 +29,6 @@ class KillStrategy(Strategy):
         # grabs empty tiles near opponent
         surrounding_tiles = utils.get_surrounding_empty_tiles(opponent, game_state)
         reachable_tiles = utils.get_reachable_tiles(location, surrounding_tiles, game_state)
-        # execute when player has ammo and there's a reachable tile to opponent
-        return ammo > 0 and reachable_tiles
+        # check if opponent nearby
+        opp_distance = utils.manhattan_distance(location, opponent)
+        return ammo > 0 and reachable_tiles and opp_distance <= 3
