@@ -23,7 +23,7 @@ https://www.gocoder.one/aisports
 cd ai-sports
 python3 -m venv venv
 source venv/bin/activate
-pip install assets/coderone-challenge-dungeon-0.1.4.tar.gz
+pip install assets/coderone-challenge-dungeon-0.1.5.tar.gz
 ```
 
 ## Contributing
