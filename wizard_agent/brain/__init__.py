@@ -10,7 +10,7 @@ from . import bomb_placement_strategy
 from . import kill_strategy
 from . import retreat_strategy
 from . import smart_bomb_strategy
-
+from . import smart_collection_strategy
 
 def RandomStrategy():
     return random_strategy.RandomStrategy()
@@ -54,3 +54,6 @@ def RetreatStrategy():
 
 def SmartBombStrategy():
     return smart_bomb_strategy.SmartBombStrategy()
+
+def SmartCollectionStrategy():
+    return smart_collection_strategy.SmartCollectionStrategy()

@@ -34,7 +34,12 @@ class SmartCollectionStrategy(strategy.Strategy):
 
         # determine if ammo/treasure bomb is within blast zone
         bombs = game_state.bombs
-        blast_zone = self.get_blast_zone(bombs, self.game_state)
+
+        blast_zone = []
+
+        for bomb in bombs:
+        	blast_tiles = utils.get_blast_zone(bomb, self.game_state)
+        	blast_zone.append(blast_tiles) 
 
         ammo_blocks = game_state.ammo
         treasure_blocks = game_state.treasure
