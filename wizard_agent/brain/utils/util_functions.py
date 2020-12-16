@@ -59,7 +59,7 @@ def get_safest_tile(location, tiles, bombs):
     Given a list of tiles and bombs, find the tile that's safest to move to
     """
 
-    bomb_distance = 10
+    bomb_distance = 1000
     closest_bomb = bombs[0]
 
     for bomb in bombs:
@@ -97,11 +97,14 @@ def move_to_tile(location, tile):
         return ACTIONS["none"]
 
 
-def get_shortest_path(start, end, game_state):
+def get_shortest_path(start, end, game_state, blast_tiles = []):
     """
     Finds the shortest path from the start node to the end node.
     Returns an array of (x,y) tuples. Uses A* search algorithm
     """
+    if start is None or end is None:
+        return None
+
     # create a list for all nodes to visit and have been visited
     queue = []
     visited = []
@@ -135,6 +138,9 @@ def get_shortest_path(start, end, game_state):
         neighbours = get_surrounding_tiles(current_node.position, game_state)
 
         for tile in neighbours:
+            if tile in blast_tiles:
+                continue  # skip if blast tile
+
             if not is_walkable(tile, game_state):
                 continue  # skip if not walkable
 
@@ -233,7 +239,7 @@ def get_blast_zone(bomb, game_state):
 
 def get_nearest_tile(location, tiles):
     if tiles:
-        tile_dist = 10
+        tile_dist = 1000
         closest_tile = tiles[0]
         for tile in tiles:
             new_dist = manhattan_distance(location, tile)
@@ -298,9 +304,10 @@ def is_safe_path(location, target_location, bombs, game_state):
     for bomb in bombs:
         blast_tiles = get_blast_zone(bomb, game_state)
         all_blast.append(blast_tiles)
-    for coord in path:
-        if coord in all_blast:
-            return False
+    if path:
+        for coord in path:
+            if coord in all_blast:
+                return False
     return True
 
 
@@ -315,3 +322,74 @@ def get_safe_tiles(danger_tiles, game_state):
             if empty not in danger_tiles:
                 safe_tiles.append(empty)
     return safe_tiles
+
+
+def safe_escape(location, game_state):
+    all_safe_walkable_tiles = []
+    bombs = game_state.bombs
+    blast_area = []
+    for bomb in bombs:
+        blast_zone = get_blast_zone(bomb, game_state)
+        blast_area = blast_area + blast_zone
+    blast_area = blast_area + get_blast_zone(location, game_state)  # putting the bomb on the bot's current location
+    for row in range(0, 12):
+        for col in range(0, 10):
+            tile = tuple([row, col])
+            if tile not in blast_area:
+                if is_walkable(tile, game_state):
+                    path = get_shortest_path(location, tile, game_state)
+                    if path:
+                        all_safe_walkable_tiles.append(tile)
+
+    nearest_tile = get_nearest_tile(location, all_safe_walkable_tiles)
+    return nearest_tile
+
+
+def get_escape_matrix(game_state):
+    size = game_state.size
+    width = size[0]
+    height = size[1]
+    escape_paths = [0] * (width * height)
+    for y in range(height):
+        for x in range(width):
+            tile = (x, y)
+            idx = width * y + x
+            if is_walkable(tile, game_state):
+                empty_tiles = get_surrounding_empty_tiles(tile, game_state)
+                escape_paths[idx] = len(empty_tiles)
+            else:
+                escape_paths[idx] = -1
+    return escape_paths
+
+
+def get_matrix_val_for_tile(tile, matrix, map_width):
+    x = tile[0]
+    y = tile[1]
+    idx = map_width * y + x
+    return matrix[idx]
+
+
+def get_tile_from_move(location, move):
+    x = location[0]
+    y = location[1]
+
+    if move == ACTIONS["down"]:
+        return tuple((x, y - 1))
+    elif move == ACTIONS["left"]:
+        return tuple((x - 1, y))
+    elif move == ACTIONS["up"]:
+        return tuple((x, y + 1))
+    elif move == ACTIONS["right"]:
+        return tuple((x + 1, y))
+    else:
+        return tuple((x, y))
+
+
+def is_movement(action):
+    actions = [
+        ACTIONS["up"],
+        ACTIONS["down"],
+        ACTIONS["right"],
+        ACTIONS["left"]
+    ]
+    return action in actions

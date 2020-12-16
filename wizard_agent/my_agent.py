@@ -35,6 +35,7 @@ class Agent:
             'smartcollect' : brain.SmartCollectionStrategy(),
         }
         self.action_queue = []
+
         self.ore_state = {}
         self.end_tick = 1800
         self.step = 0
@@ -51,6 +52,7 @@ class Agent:
         reward = player_state.reward
         with open(self.filename, 'a+', newline = '') as f:
             f.write('Agent ' + str(player_state.id) + ' | Tick: {0} - {1} | Current Score: {2} | Strategy Used: {3} \n'.format(step, actions, reward, strategy_name))
+
 
     def next_move(self, game_state, player_state):
         """This method is called each time your Agent is required to choose an action"""

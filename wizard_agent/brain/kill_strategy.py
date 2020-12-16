@@ -22,6 +22,7 @@ class KillStrategy(Strategy):
         return [constants.ACTIONS["none"]]
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
+        # TODO modify condition for combat strategy
         location = player_state.location
         opponent_list = game_state.opponents(player_state.id)
         opponent = utils.get_opponent(location, opponent_list)
