@@ -18,6 +18,10 @@ class SmartCollectionStrategy(strategy.Strategy):
         self.ammo_state = {}
         self.prev_bombs = []
 
+        # previous state
+        self.prev_item = None
+        self.prev_target = None
+
         self.game_state = None
         self.player_state = None
 
@@ -53,6 +57,8 @@ class SmartCollectionStrategy(strategy.Strategy):
 
         # navigate to ideal tile
         if ideal_tile is not None:
+            self.prev_item = game_state.entity_at(ideal_tile)
+            self.prev_target = ideal_tile
             path = utils.get_shortest_path(location, ideal_tile, game_state)
             action_seq = utils.get_path_action_seq(location, path)
             return action_seq
@@ -62,6 +68,8 @@ class SmartCollectionStrategy(strategy.Strategy):
     def can_execute(self, game_state: object, player_state: object) -> bool:
         self.game_state = game_state
         self.player_state = player_state
+        self.prev_target = None
+        self.prev_item = None
 
         location = player_state.location
         ammo = player_state.ammo
@@ -73,7 +81,11 @@ class SmartCollectionStrategy(strategy.Strategy):
         return ammo < 5 and reachable_tiles
 
     def is_valid(self, game_state: object, player_state: object) -> bool:
-        return True
+        if self.prev_target is not None:
+            cur_target_item = game_state.entity_at(self.prev_target)
+            return cur_target_item == self.prev_item
+        else:
+            return True
 
     def get_ideal_tile(self, all_location, ammo_blocks, treasure_blocks, location):
         opponent_list = self.game_state.opponents(self.player_state.id)
@@ -84,7 +96,7 @@ class SmartCollectionStrategy(strategy.Strategy):
         ideal_tile = None
         while len(possible_tiles) > 0:
             tile = possible_tiles.pop(0)
-            if not utils.is_opponent_closer(location, opponent, tile):
+            if not utils.is_opponent_closer(location, opponent, tile, self.game_state):
                 ideal_tile = tile
                 break
         return ideal_tile

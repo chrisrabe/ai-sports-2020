@@ -36,6 +36,9 @@ def _get_furthest_ammo_from_opponent(opponent_location, ammo_list):
 
 
 class ReloadStrategy(strategy.Strategy):
+    def __init__(self):
+        self.prev_target = None
+
     def execute(self, game_state: object, player_state: object) -> List[str]:
         ammo = game_state.ammo
         location = player_state.location
@@ -51,12 +54,14 @@ class ReloadStrategy(strategy.Strategy):
 
         # navigate to the ammo
         if nearest_ammo is not None:
-            if not utils.is_opponent_closer(location, opponent_location, nearest_ammo):
+            if not utils.is_opponent_closer(location, opponent_location, nearest_ammo, game_state):
+                self.prev_target = nearest_ammo
                 path = utils.get_shortest_path(location, nearest_ammo, game_state)
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
 
         if furthest_ammo_from_opponent is not None:
+            self.prev_target = furthest_ammo_from_opponent
             path = utils.get_shortest_path(location, furthest_ammo_from_opponent, game_state)
             action_seq = utils.get_path_action_seq(location, path)
             return action_seq
@@ -64,6 +69,7 @@ class ReloadStrategy(strategy.Strategy):
         return [constants.ACTIONS["none"]]
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
+        self.prev_target = None
         player_ammo = player_state.ammo
         bombs = game_state.bombs
         location = player_state.location
@@ -77,7 +83,7 @@ class ReloadStrategy(strategy.Strategy):
         nearest_ammo = _get_nearest_ammo(location, ammo_in_range)
 
         # define execution conditions
-        is_opponent_closer = utils.is_opponent_closer(location, opponent_location, nearest_ammo)
+        is_opponent_closer = utils.is_opponent_closer(location, opponent_location, nearest_ammo, game_state)
 
         # check safety
         furthest_ammo_safe = True
@@ -95,4 +101,9 @@ class ReloadStrategy(strategy.Strategy):
         return player_ammo < 10 and can_reach_any_ammo
 
     def is_valid(self, game_state: object, player_state: object) -> bool:
-        return True
+        if self.prev_target is not None:
+            cur_item = game_state.entity_at(self.prev_target)
+            return cur_item == "t"
+        else:
+            return True
+

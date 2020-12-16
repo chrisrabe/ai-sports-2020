@@ -87,7 +87,7 @@ class SmartBombStrategy(strategy.Strategy):
         ideal_tile = None
         while len(possible_tiles) > 0:
             tile = possible_tiles.pop(0)
-            if not utils.is_opponent_closer(location, opponent, tile):
+            if not utils.is_opponent_closer(location, opponent, tile, self.game_state):
                 ideal_tile = tile
                 break
         return ideal_tile

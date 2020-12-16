@@ -36,6 +36,9 @@ def _get_furthest_treasure_from_opponent(opponent_location, treasure_list):
 
 
 class TreasureStrategy(strategy.Strategy):
+    def __init__(self):
+        self.prev_target = None
+
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
         treasure = game_state.treasure
@@ -50,12 +53,14 @@ class TreasureStrategy(strategy.Strategy):
 
         # navigate to the treasure
         if nearest_treasure is not None:
-            if not utils.is_opponent_closer(location, opponent_location, nearest_treasure):
+            if not utils.is_opponent_closer(location, opponent_location, nearest_treasure, game_state):
+                self.prev_target = nearest_treasure
                 path = utils.get_shortest_path(location, nearest_treasure, game_state)
                 action_seq = utils.get_path_action_seq(location, path)
                 return action_seq
 
         if furthest_treasure_from_opponent is not None:
+            self.prev_target = furthest_treasure_from_opponent
             path = utils.get_shortest_path(location, furthest_treasure_from_opponent, game_state)
             action_seq = utils.get_path_action_seq(location, path)
             return action_seq
@@ -63,6 +68,7 @@ class TreasureStrategy(strategy.Strategy):
         return [constants.ACTIONS["none"]]
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
+        self.prev_target = None
         location = player_state.location
         treasures = game_state.treasure
         bombs = game_state.bombs
@@ -71,7 +77,7 @@ class TreasureStrategy(strategy.Strategy):
         reachable_treasure = utils.get_reachable_tiles(location, treasures, game_state)
         furthest_treasure = _get_furthest_treasure_from_opponent(opponent_location, reachable_treasure)
         nearest_treasure = _get_nearest_treasure(location, reachable_treasure)
-        is_opponent_closer = utils.is_opponent_closer(location, opponent_location, nearest_treasure)
+        is_opponent_closer = utils.is_opponent_closer(location, opponent_location, nearest_treasure, game_state)
 
         closest_treasure_safe = False
         furthest_treasure_safe = False
@@ -87,4 +93,8 @@ class TreasureStrategy(strategy.Strategy):
         return can_reach_nearest_treasure or can_reach_furthest_treasure
 
     def is_valid(self, game_state: object, player_state: object) -> bool:
-        return True
+        if self.prev_target is not None:
+            cur_item = game_state.entity_at(self.prev_target)
+            return cur_item == "t"
+        else:
+            return True

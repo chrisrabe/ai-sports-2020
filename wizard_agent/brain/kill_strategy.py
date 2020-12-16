@@ -5,6 +5,9 @@ from .utils import util_functions as utils, constants
 
 
 class KillStrategy(Strategy):
+    def __init__(self):
+        self.prev_target = None
+
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
         opponent_list = game_state.opponents(player_state.id)
@@ -22,7 +25,6 @@ class KillStrategy(Strategy):
         return [constants.ACTIONS["none"]]
 
     def can_execute(self, game_state: object, player_state: object) -> bool:
-        # TODO modify condition for combat strategy
         location = player_state.location
         opponent_list = game_state.opponents(player_state.id)
         opponent = utils.get_opponent(location, opponent_list)
@@ -34,4 +36,10 @@ class KillStrategy(Strategy):
         return ammo > 0 and reachable_tiles
 
     def is_valid(self, game_state: object, player_state: object) -> bool:
-        return True
+        if self.prev_target is not None:
+            location = player_state.location
+            opponent_list = game_state.opponents(player_state.id)
+            opponent = utils.get_opponent(location, opponent_list)
+            return utils.manhattan_distance(self.prev_target, opponent) <= 2
+        else:
+            return True

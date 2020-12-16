@@ -35,11 +35,20 @@ class Agent:
 
     def next_move(self, game_state, player_state):
         """This method is called each time your Agent is required to choose an action"""
+        location = player_state.location
+        defensive_strats = ["flee", "retreat"]
+
         next_action = None
         if self.action_queue:
             next_action = self.action_queue.pop(0)
-            # is next tile still reachable?
-            # is target still there?
+            if utils.is_movement(next_action):
+                next_tile = utils.get_tile_from_move(location, next_action)
+                is_reachable = utils.is_walkable(next_tile, game_state)
+                is_valid = self.last_strategy and self.strategies[self.last_strategy].is_valid(game_state, player_state)
+                if not is_reachable and self.last_strategy not in defensive_strats:
+                    self.action_queue = []
+                elif not is_valid:
+                    self.action_queue = []
 
         # if queue is empty, get strategy
         if not self.action_queue:
@@ -62,6 +71,9 @@ class Agent:
             strategy = self.strategies[strategy_name]
             actions = strategy.execute(game_state, player_state)
             self.action_queue = self.action_queue + actions
+            self.last_strategy = strategy_name
+            next_action = self.action_queue.pop(0)
+            print("Player {} is executing: {}".format(player_state.id, strategy_name))
 
         # execute the first action
         return next_action

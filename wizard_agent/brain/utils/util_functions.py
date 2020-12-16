@@ -98,7 +98,7 @@ def move_to_tile(location, tile):
         return ACTIONS["none"]
 
 
-def get_shortest_path(start, end, game_state, blast_tiles = []):
+def get_shortest_path(start, end, game_state, blast_tiles=[]):
     """
     Finds the shortest path from the start node to the end node.
     Returns an array of (x,y) tuples. Uses A* search algorithm
@@ -278,16 +278,20 @@ def get_empty_locations(tiles, game_state):
     return empty_locations
 
 
-def is_opponent_closer(location, opponent_location, block):
+def is_opponent_closer(location, opponent_location, block, game_state):
     """
     Gets the opponent's distance from the treasure and compare's it to our own distance from the treasure
     """
     if block is None:
         return False
 
-    opponent_dist = manhattan_distance(opponent_location, block)
-    our_dist = manhattan_distance(location, block)
-    if our_dist > opponent_dist:
+    opponent_dist = get_shortest_path(opponent_location, block, game_state)
+    our_dist = get_shortest_path(location, block, game_state)
+    if opponent_dist is None:
+        return False
+    if our_dist is None:
+        return True
+    if len(our_dist) > len(opponent_dist):
         return True
     return False
 
@@ -368,3 +372,29 @@ def get_matrix_val_for_tile(tile, matrix, map_width):
     y = tile[1]
     idx = map_width * y + x
     return matrix[idx]
+
+
+def get_tile_from_move(location, move):
+    x = location[0]
+    y = location[1]
+
+    if move == ACTIONS["down"]:
+        return tuple((x, y + 1))
+    elif move == ACTIONS["left"]:
+        return tuple((x + 1, y))
+    elif move == ACTIONS["up"]:
+        return tuple((x, y - 1))
+    elif move == ACTIONS["right"]:
+        return tuple((x - 1, y))
+    else:
+        return tuple((x, y))
+
+
+def is_movement(action):
+    actions = [
+        ACTIONS["up"],
+        ACTIONS["down"],
+        ACTIONS["right"],
+        ACTIONS["left"]
+    ]
+    return action in actions
