@@ -98,7 +98,7 @@ def move_to_tile(location, tile):
         return ACTIONS["none"]
 
 
-def get_shortest_path(start, end, game_state):
+def get_shortest_path(start, end, game_state, blast_tiles=[]):
     """
     Finds the shortest path from the start node to the end node.
     Returns an array of (x,y) tuples. Uses A* search algorithm
@@ -136,6 +136,8 @@ def get_shortest_path(start, end, game_state):
         neighbours = get_surrounding_tiles(current_node.position, game_state)
 
         for tile in neighbours:
+            if tile in blast_tiles:
+                continue  # skip if blast tile
             if not is_walkable(tile, game_state):
                 continue  # skip if not walkable
 
@@ -318,6 +320,7 @@ def get_safe_tiles(danger_tiles, game_state):
                 safe_tiles.append(empty)
     return safe_tiles
 
+
 def safe_escape(location, game_state):
     all_safe_walkable_tiles = []
     bombs = game_state.bombs
@@ -325,10 +328,10 @@ def safe_escape(location, game_state):
     for bomb in bombs:
         blast_zone = get_blast_zone(bomb, game_state)
         blast_area = blast_area + blast_zone
-    blast_area = blast_area + get_blast_zone(location, game_state) # putting the bomb on the bot's current location
-    for row in range(0,12):
-        for col in range(0,10):
-            tile = tuple([row,col])
+    blast_area = blast_area + get_blast_zone(location, game_state)  # putting the bomb on the bot's current location
+    for row in range(0, 12):
+        for col in range(0, 10):
+            tile = tuple([row, col])
             if tile not in blast_area:
                 if is_walkable(tile, game_state):
                     path = get_shortest_path(location, tile, game_state)
