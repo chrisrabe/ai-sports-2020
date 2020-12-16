@@ -42,7 +42,7 @@ class Agent:
         self.initial_destroyable_blocks = 0
 
         # DEBUG
-        self.debug_mode = True
+        self.debug_mode = False
         self.filename =  datetime.now().strftime('wizard_agent/log/log_%H_%M_%d_%m_%Y.txt')
 
 
