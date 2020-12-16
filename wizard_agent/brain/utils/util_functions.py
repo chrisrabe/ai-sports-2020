@@ -329,7 +329,7 @@ def get_escape_matrix(game_state):
             idx = width * y + x
             if is_walkable(tile, game_state):
                 empty_tiles = get_surrounding_empty_tiles(tile, game_state)
-                escape_paths[idx] = empty_tiles
+                escape_paths[idx] = len(empty_tiles)
             else:
                 escape_paths[idx] = -1
     return escape_paths
