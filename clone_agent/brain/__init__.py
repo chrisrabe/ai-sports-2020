@@ -8,7 +8,6 @@ from . import ore_bomb_strategy
 from . import utils
 from . import bomb_placement_strategy
 from . import kill_strategy
-from . import combo_kill_strategy
 from . import retreat_strategy
 from . import smart_bomb_strategy
 from . import smart_collection_strategy
@@ -37,9 +36,6 @@ def OreBombStrategy():
 
 def KillStrategy():
     return kill_strategy.KillStrategy()
-
-def ComboKillStrategy():
-    return combo_kill_strategy.ComboKillStrategy()
 
 
 def RetreatStrategy():
