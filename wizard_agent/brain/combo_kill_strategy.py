@@ -7,7 +7,6 @@ import random
 
 class ComboKillStrategy(Strategy):
     def execute(self, game_state: object, player_state: object) -> List[str]:
-        print('combo kill')
         location = player_state.location
         opponent_list = game_state.opponents(player_state.id)
         opponent = utils.get_opponent(location, opponent_list)
@@ -24,6 +23,14 @@ class ComboKillStrategy(Strategy):
             shots = player_state.ammo
             for i in range(shots):
                 action_seq.append(constants.ACTIONS["bomb"])
+                new_surrounding_tiles = utils.get_surrounding_empty_tiles(location, game_state)
+                reachable_tiles = utils.get_reachable_tiles(location, new_surrounding_tiles, game_state)
+                new_nearest_tile = utils.get_nearest_tile(location, reachable_tiles)
+                # navigate to nearest empty tile
+                if new_nearest_tile is not None:
+                    path = utils.get_shortest_path(location, new_nearest_tile, game_state)
+                    next_action_seq = utils.get_path_action_seq(location, path)
+                action_seq += next_action_seq
             return action_seq
         return [constants.ACTIONS["none"]]
 
@@ -37,7 +44,6 @@ class ComboKillStrategy(Strategy):
         non_walkable_items = ['b', 'ob', 'ib', 'sb']
         
         check_opponent_surroundings = [True for tile in opponent_surroundings if game_state.entity_at(tile) in non_walkable_items]
-        # print(check_opponent_surroundings)
         if sum(check_opponent_surroundings) > 0:
             surrounding_empty_tiles = utils.get_surrounding_empty_tiles(opponent, game_state)
             reachable_tiles = utils.get_reachable_tiles(location, surrounding_empty_tiles, game_state)
