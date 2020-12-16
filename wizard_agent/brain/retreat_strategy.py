@@ -1,5 +1,4 @@
 from typing import List
-import random
 from .strategy import Strategy
 from .utils import util_functions as utils, constants
 
@@ -19,6 +18,9 @@ def get_opponent_danger_zone(opponent, game_state):
 
 
 class RetreatStrategy(Strategy):
+    def __init__(self):
+        self.fields = {}
+
     def execute(self, game_state: object, player_state: object) -> List[str]:
         location = player_state.location
         opponent_list = game_state.opponents(player_state.id)
@@ -39,3 +41,6 @@ class RetreatStrategy(Strategy):
         opponent = utils.get_opponent(location, opponent_list)
         danger_zones = get_opponent_danger_zone(opponent, game_state)
         return location in danger_zones
+
+    def update_fields(self, new_fields):
+        self.fields = new_fields

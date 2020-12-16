@@ -140,8 +140,8 @@ def get_shortest_path(start, end, game_state, blast_tiles = []):
 
         for tile in neighbours:
             if tile in blast_tiles:
-                continue # skip if blast tile
-            
+                continue  # skip if blast tile
+
             if not is_walkable(tile, game_state):
                 continue  # skip if not walkable
 
@@ -324,6 +324,7 @@ def get_safe_tiles(danger_tiles, game_state):
                 safe_tiles.append(empty)
     return safe_tiles
 
+
 def safe_escape(location, game_state):
     all_safe_walkable_tiles = []
     bombs = game_state.bombs
@@ -331,16 +332,39 @@ def safe_escape(location, game_state):
     for bomb in bombs:
         blast_zone = get_blast_zone(bomb, game_state)
         blast_area = blast_area + blast_zone
-    blast_area = blast_area + get_blast_zone(location, game_state) # putting the bomb on the bot's current location
-    for row in range(0,12):
-        for col in range(0,10):
-            tile = tuple([row,col])
+    blast_area = blast_area + get_blast_zone(location, game_state)  # putting the bomb on the bot's current location
+    for row in range(0, 12):
+        for col in range(0, 10):
+            tile = tuple([row, col])
             if tile not in blast_area:
                 if is_walkable(tile, game_state):
                     path = get_shortest_path(location, tile, game_state)
                     if path:
                         all_safe_walkable_tiles.append(tile)
-    
+
     nearest_tile = get_nearest_tile(location, all_safe_walkable_tiles)
     return nearest_tile
-    
+
+
+def get_escape_matrix(game_state):
+    size = game_state.size
+    width = size[0]
+    height = size[1]
+    escape_paths = [0] * (width * height)
+    for y in range(height):
+        for x in range(width):
+            tile = (x, y)
+            idx = width * y + x
+            if is_walkable(tile, game_state):
+                empty_tiles = get_surrounding_empty_tiles(tile, game_state)
+                escape_paths[idx] = len(empty_tiles)
+            else:
+                escape_paths[idx] = -1
+    return escape_paths
+
+
+def get_matrix_val_for_tile(tile, matrix, map_width):
+    x = tile[0]
+    y = tile[1]
+    idx = map_width * y + x
+    return matrix[idx]

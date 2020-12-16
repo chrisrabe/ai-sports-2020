@@ -31,7 +31,6 @@ class Agent:
             'smartcollect' : brain.SmartCollectionStrategy(),
         }
         self.action_queue = []
-        self.ore_state = {}
 
     def next_move(self, game_state, player_state):
         """This method is called each time your Agent is required to choose an action"""

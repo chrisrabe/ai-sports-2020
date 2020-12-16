@@ -8,3 +8,5 @@ ACTIONS = {
 }
 
 ACTION_LIST = ['', 'u', 'd', 'l', 'r', 'p']
+
+BOMB_DURATION = 35
