@@ -4,8 +4,10 @@ TEMPLATE for creating your own Agent to compete in
 For more info and resources, check out: https://bit.ly/aisportschallenge
 
 BIO:
-This is our agent. He does things. Yay
-
+helo my name is dongerino pasterino ヽ༼ຈل͜ຈ༽ﾉ, i am 69 year old donger from imaqtmeatloaf’s stream .
+420 years ago i was kidnapped and put into a donger concentration camp for 9001 years.
+1 year ago, imaqtlasagne and imaqtpie invaded the camp and rescued me.
+now i work as teacherino, passing down the wisdom of ( ͡° ͜ʖ ͡°) to young dongers.
 """
 
 # import time
